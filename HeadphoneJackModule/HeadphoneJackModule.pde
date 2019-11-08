@@ -6,7 +6,7 @@ byte[] inBuffer = new byte[255];
 boolean Ain1 = false; //a|a
 boolean Ain2 = false; //b|b
 boolean Bin1 = false; //c|c
-boolean Bin2 = false; //d|d
+boolean Bin2 = true; //d|d
 
 //Game stuff
 float timer = 400;
