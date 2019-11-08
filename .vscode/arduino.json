@@ -1,0 +1,5 @@
+{
+    "board": "arduino:avr:uno",
+    "sketch": "module_dial\\lib\\VSync\\examples\\SimpleSender\\SimpleSender.ino",
+    "programmer": "AVR ISP"
+}
