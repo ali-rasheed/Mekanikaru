@@ -30,7 +30,12 @@ String[] gameInstructions = {"Connect A to 1 and B to 2", "Connect A to 2 and B 
                              "Connect A to 1 and Disconnect B", "Connect A to 2 and Disconnect B"};
 
 //*****Section for heahphone mod*****
-boolean buttonPressed = false;
+int LED1StoppedOn = 0;
+int LED2StoppedOn = 0;
+
+int LEDtask = 0;
+
+String[] LEDInstructions = {"Stop 1 on Red, Stop 2 on Green"};
 
 void setup()
 {
@@ -87,7 +92,7 @@ void draw()
     }
   }else if(currentMod == 1){
     fill(0);
-    text("Press the Button", 100, 350);
+    text(LEDInstructions[0], 100, 350);
     
     if(testIfRGBLEDTaskDone() == true) {
       score++;
@@ -144,6 +149,7 @@ boolean testIfHeadphoneTaskDone() {
 void serialEvent(Serial myPort) {
   //println("got1");
   
+  //Do if info from the Headphone Module
   if (myPort == headphoneArduinoPort) {
     headphoneArduinoPort.readBytesUntil('&', inBuffer);  //read in all data until '&' is encountered
     
@@ -174,22 +180,32 @@ void serialEvent(Serial myPort) {
       
     }
   }
+  //Do if info from the RGB LED module
   else if (myPort == RGBLEDArduinoPort) {
   println("serial event detected port 2");
     //--------------code for recieving and parcing serial information from Arduino1 goes here------------------//
     /// check processing tutorial on serial communication (serial call/response) example
     String myString = RGBLEDArduinoPort.readStringUntil(' ');
-    //println(myString);
-    String[] b = splitTokens(myString, "b");
-    println(b[1]);
-    if(b[1].equals("Y")){
-      buttonPressed = true;
-    }else buttonPressed = false;
+    String[] a = splitTokens(myString, "a");
     
   }
+    
+    //Dummy code for the "button Mod"
+  //  //println(myString);
+  //  String[] b = splitTokens(myString, "b");
+  //  println(b[1]);
+  //  if(b[1].equals("Y")){
+  //    buttonPressed = true;
+  //  }else buttonPressed = false;
+    
+  //}
 }
 
+//This only has one if as a test. Need to add all possible task combinations of colors
 boolean testIfRGBLEDTaskDone() {
-  if (buttonPressed == true) return true;
+  if (LEDtask == 0){
+    if(LED1StoppedOn == 1 && LED2StoppedOn == 2) return true;
+  }else return false;
+  
   return false;
 }

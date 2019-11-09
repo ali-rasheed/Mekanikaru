@@ -5,8 +5,8 @@ byte[] inBuffer = new byte[255];
 
 boolean Ain1 = false; //a|a
 boolean Ain2 = false; //b|b
-flower Bin1 = false; //c|c
-boolean Bin2 = true; //d|d
+boolean Bin1 = false; //c|c
+boolean Bin2 = false; //d|d
 
 //Game stuff
 float timer = 400;
@@ -28,7 +28,7 @@ String[] gameInstructions = {"Connect A to 1 and B to 2", "Connect A to 2 and B 
 
 void setup() {
   size(600,600);
-  port = new Serial(this, Serial.list()[1], 9600);
+  port = new Serial(this, Serial.list()[1], 38400);
   textSize(30);
 }
 
