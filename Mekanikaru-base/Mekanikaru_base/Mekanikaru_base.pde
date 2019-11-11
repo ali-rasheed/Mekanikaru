@@ -18,7 +18,14 @@ public boolean switchA,switchB,switchC,switchD;
 
 //jackValues
 public boolean jA1,jA2,jA3,jA4,jB1,jB2,jB3,jB4,jC1,jC2,jC3,jC4;
-
+int jackTask = 0; //    A | B
+                  // 0: 1 | 2
+                  // 1: 2 | 1
+                  // 2: / | 1
+                  // 3: / | 2
+                  // 4: 1 | /
+                  // 5: 2 | /
+                  
 Serial dialArduino, LEDArduino, switchArduino, jackArduino;
 
 
