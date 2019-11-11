@@ -41,6 +41,8 @@ void setup() {
   pinMode(button1, INPUT);
   pinMode(button2, INPUT);
   Serial.begin(10600);
+  sender.observe(RGB1);
+  sender.observe(RGB2);
 }
 
 void loop() {
@@ -142,11 +144,11 @@ void checkLED1() {
 void sendVsync() {
   if (cycle1 == false) {
     RGB1 = colour1;
-    sender.observe(RGB1);
+//    sender.observe(RGB1);
   }
   if (cycle2 == false) {
     RGB2 = colour2;
-    sender.observe(RGB2);
+//    sender.observe(RGB2);
   }
 }
 

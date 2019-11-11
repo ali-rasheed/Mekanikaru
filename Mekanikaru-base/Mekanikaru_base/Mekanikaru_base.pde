@@ -8,16 +8,16 @@ ValueReceiver dialReceiver, LEDReceiver, switchReceiver,jackReceiver;
 
 
 //Dial Values
-public int dialVal ;
+public int dialVal;
 
 //LED Values
 public int RGB1,RGB2;
 
 //switch Values
-public boolean switchA,switchB,switchC,switchD;
+public int switchA,switchB,switchC,switchD,switchE;
 
 //jackValues
-public boolean jA1,jA2,jA3,jA4,jB1,jB2,jB3,jB4,jC1,jC2,jC3,jC4;
+public int jA1,jA2,jA3,jA4,jB1,jB2,jB3,jB4,jC1,jC2,jC3,jC4;
 
 Serial dialArduino, LEDArduino, switchArduino, jackArduino;
 
@@ -26,13 +26,10 @@ void setup()
 {
   size(400, 400);
 
-   dialArduino = new Serial(this,Serial.list()[1], 9600);
-   LEDArduino = new Serial(this, Serial.list()[2], 10600);
-   switchArduino = new Serial(this, Serial.list()[3], 11600);
-   jackArduino = new Serial(this, Serial.list()[4], 12600);
-   
-  //  Ininialize the ValueReceiver with this (to hook it to your sketch)
-  //  and the serial interface you want to use.
+   dialArduino = new Serial(this,"COM5", 9600);
+   LEDArduino = new Serial(this, "COM4", 10600);
+   switchArduino = new Serial(this, "COM3", 5000);
+   jackArduino = new Serial(this, "COM6", 12600);
   dialReceiver = new ValueReceiver(this, dialArduino);
   LEDReceiver = new ValueReceiver(this, LEDArduino);
   switchReceiver = new ValueReceiver(this, switchArduino);
@@ -46,13 +43,43 @@ void setup()
   switchReceiver.observe("switchB");
   switchReceiver.observe("switchC");
   switchReceiver.observe("switchD");
+  switchReceiver.observe("switchE");
   
-  //jackReceiver.observe("analogValue1");
+  dialReceiver.observe("dialVal");
+  
+  jackReceiver.observe("jA1");
+  jackReceiver.observe("jA2");
+  jackReceiver.observe("jB1");
+  jackReceiver.observe("jB2");
+  
   //dialReceiver.observe("analogValue2");
 }
 
 void draw() 
 {
+  //LEDReceiver.observe("RGB1");
+  //LEDReceiver.observe("RGB2");
+  //switchReceiver.observe("switchA");
+  //switchReceiver.observe("switchB");
+  //switchReceiver.observe("switchC");
+  //switchReceiver.observe("switchD");
+  //dialReceiver.observe("dialVal");
+  println("rgb1: " +RGB1);
+  println("rgb1: " +RGB2);
+  
+  println("switchA: " +switchA);
+  println("switchB: " +switchB);
+  println("switchC: " +switchC);
+  println("switchD: " +switchD);
+  println("switchE: " +switchE);
+  
+  println("dialVal: " +dialVal);
+  
+  println("jackA1: " +jA1);
+  println("jackA2: " +jA2);
+  println("jackB1: " +jB1);
+  println("jackB2: " +jB2);
+  
 }
 //int currentMod = 0; //0:Headhpone Mod
 //                    //1: RGB LED Mod
