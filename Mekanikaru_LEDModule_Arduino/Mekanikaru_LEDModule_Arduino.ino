@@ -5,6 +5,8 @@ int green[] = {0,100,0};
 int blue[] = {0,0,150};
 int purple[] = {150,0,175};
 
+char colourChar[] = {'h','i','j','k','l','m'};
+
 int button1 = 12;
 int button2 = 13;
 
@@ -122,12 +124,12 @@ void checkLED1() {
 void sendColours() {
   if (cycle1 == false) {
     Serial.print("a");
-    Serial.print(colour1);
+    Serial.print(colourChar[colour1]);
     Serial.print("a");
   }
   if (cycle2 == false) {
     Serial.print("b");
-    Serial.print(colour2);
+    Serial.print(colourChar[colour2]);
     Serial.print("b");
   }
   Serial.println(" ");
@@ -229,8 +231,12 @@ void goPurple2() {
 void reset() {
   cycle1 = true;
   cycle2 = true;
-  interval1 = interval1 / random(1.05,1.2);
-  interval2 = interval2 / random(1.05,1.2);
+  if (interval1 > 100) {
+    interval1 = interval1 - random(10,100);
+  }
+  if (interval2 > 100) {
+    interval2 = interval2 - random(10,100);
+  }
 }
 
 void resetListen() {
