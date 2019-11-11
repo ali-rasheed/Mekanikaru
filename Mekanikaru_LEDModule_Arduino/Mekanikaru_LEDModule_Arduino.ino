@@ -28,7 +28,7 @@ boolean cycle2 = true;
 unsigned long prevMillis1 = 0;
 unsigned long prevMillis2 = 0;
 
-long interval1 = 500;
+long interval1 = 1000;
 long interval2 = 1000;
 
 void setup() {
@@ -229,6 +229,8 @@ void goPurple2() {
 void reset() {
   cycle1 = true;
   cycle2 = true;
+  interval1 = interval1 / random(1.05,1.2);
+  interval2 = interval2 / random(1.05,1.2);
 }
 
 void resetListen() {
