@@ -229,8 +229,12 @@ void goPurple2() {
 // RESET //
 
 void reset() {
+  colour1 = 0;
   cycle1 = true;
+  pressed1 = false;
+  colour2 = 0;
   cycle2 = true;
+  pressed2 = false;
   if (interval1 > 100) {
     interval1 = interval1 - random(10,100);
   }
