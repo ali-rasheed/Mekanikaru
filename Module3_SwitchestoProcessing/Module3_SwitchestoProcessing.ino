@@ -2,11 +2,11 @@
 
 #include <Arduino.h>
 
-#define YELLOW_LED_PIN  3
-#define RED_LED_PIN     4
-#define GREEN_LED_PIN   5
-#define BLUE_LED_PIN    6
-#define VIOLET_LED_PIN  7
+#define A_LED_PIN  3
+#define B_LED_PIN  4
+#define C_LED_PIN  5
+#define D_LED_PIN  6
+#define E_LED_PIN  7
 
 
 
@@ -22,11 +22,11 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(5000);
 
-  pinMode(BLUE_LED_PIN, INPUT);
-  pinMode(RED_LED_PIN , INPUT);
-  pinMode(GREEN_LED_PIN , INPUT);
-  pinMode(YELLOW_LED_PIN, INPUT);
-  pinMode(VIOLET_LED_PIN, INPUT);
+  pinMode(A_LED_PIN, INPUT);
+  pinMode(B_LED_PIN , INPUT);
+  pinMode(C_LED_PIN , INPUT);
+  pinMode(D_LED_PIN, INPUT);
+  pinMode(E_LED_PIN, INPUT);
 
 
   //pinMode(button8Pin, INPUT);
@@ -42,11 +42,11 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-  YELLOW_PB_CONTROL();
-  RED_PB_CONTROL();
-  GREEN_PB_CONTROL();
-  BLUE_PB_CONTROL();
-  VIOLET_PB_CONTROL();
+  A_PB_CONTROL();
+  B_PB_CONTROL();
+  C_PB_CONTROL();
+  D_PB_CONTROL();
+  E_PB_CONTROL();
   // button8();
   
   sender1.sync();
@@ -54,30 +54,30 @@ void loop() {
 }
 
 
-void YELLOW_PB_CONTROL(void) {
+void A_PB_CONTROL(void) {
 
-  int yellow = digitalRead(YELLOW_LED_PIN);
+  int A = digitalRead(A_LED_PIN);
 
-  if (yellow == LOW) {
+  if (A == LOW) {
     switchA = 0;
 
   }
-  else if (yellow == HIGH) {
+  else if (A == HIGH) {
     switchA = 1;
 
   }
 }
 
-void RED_PB_CONTROL(void) {
+void B_PB_CONTROL(void) {
 
-  int red = digitalRead(RED_LED_PIN);
+  int B = digitalRead(B_LED_PIN);
 
-  if (red == LOW) {
+  if (B == LOW) {
     switchB = 0;
     //Serial.println("RED ON");
     //    Serial.print("bYb");
   }
-  else if (red  == HIGH) {
+  else if (B  == HIGH) {
     switchB = 1;
     //Serial.println("*********");
     //    Serial.print("bNb");
@@ -85,16 +85,16 @@ void RED_PB_CONTROL(void) {
 }
 
 
-void GREEN_PB_CONTROL(void) {
+void C_PB_CONTROL(void) {
 
-  int green = digitalRead(GREEN_LED_PIN);
+  int C = digitalRead(C_LED_PIN);
 
-  if (green == LOW) {
+  if (C == LOW) {
     switchC = 0;
     //Serial.println("GREEN ON");
     //    Serial.print("cYc");
   }
-  else if (green == HIGH) {
+  else if (C == HIGH) {
     switchC = 1;
 
     //Serial.println("******");
@@ -102,28 +102,28 @@ void GREEN_PB_CONTROL(void) {
   }
 }
 
-void BLUE_PB_CONTROL(void) {
+void D_PB_CONTROL(void) {
 
-  int blue = digitalRead(BLUE_LED_PIN);
+  int D = digitalRead(D_LED_PIN);
 
-  if (blue == LOW) {
+  if (D == LOW) {
     switchD = 0;
   }
-  else if ( blue = HIGH) {
+  else if ( D = HIGH) {
     switchD = 1;
 
   }
 }
 
-void VIOLET_PB_CONTROL(void) {
+void E_PB_CONTROL(void) {
 
-  int violet = digitalRead(VIOLET_LED_PIN);
+  int E = digitalRead(E_LED_PIN);
 
-  if (violet == LOW) {
+  if (E == LOW) {
   switchE = 0;
     //    Serial.println("eYe ");
   }
-  else if (violet = HIGH) {
+  else if (E = HIGH) {
     switchE = 1;
   }
 }
