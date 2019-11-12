@@ -1,12 +1,13 @@
 import processing.serial.*; //library for serial communication
 Serial headphoneArduinoPort; //creates object "firstArduinoPort" of serial class
 Serial RGBLEDArduinoPort;   //creates object "secondArduinoPort" of serial class
+
 //==================================================================
 int currentMod = 0; //0:Headhpone Mod
                     //1: RGB LED Mod
 
 //*****Section for heahphone mod*****
-byte[] inBuffer = new byte[255];
+byte[] inBufferJack = new byte[255];
 boolean Ain1 = false; //a|a
 boolean Ain2 = false; //b|b
 boolean Bin1 = false; //c|c
@@ -29,13 +30,16 @@ String[] gameInstructions = {"Connect A to 1 and B to 2", "Connect A to 2 and B 
                              "Disconnect A and Connect B to 1", "Disconnect A and Connect B to 2",
                              "Connect A to 1 and Disconnect B", "Connect A to 2 and Disconnect B"};
 
-//*****Section for heahphone mod*****
-int LED1StoppedOn = 0;
-int LED2StoppedOn = 0;
+//*****Section for RGBLED mod*****
+byte[] inBufferLED = new byte[255];
+char LED1StoppedOn = ' ';
+char LED2StoppedOn = ' ';
+int LED1On;
+int LED2On;
 
 int LEDtask = 0;
 
-String[] LEDInstructions = {"Stop 1 on Red, Stop 2 on Green"};
+String[] LEDInstructions = {"Stop 1 on Orange, Stop 2 on Blue"};
 
 void setup()
 {
@@ -46,10 +50,10 @@ void setup()
   //also make sure to assign correct boud rate
 
   //initialize serials 
-  headphoneArduinoPort = new Serial(this, Serial.list()[1], 38400); //port 4
+  headphoneArduinoPort = new Serial(this, Serial.list()[2], 38400); //port 1
   headphoneArduinoPort.bufferUntil('&');
   
-  RGBLEDArduinoPort = new Serial(this, Serial.list()[2], 9600); //port 6
+  RGBLEDArduinoPort = new Serial(this, Serial.list()[1], 9600); //port 2
   RGBLEDArduinoPort.bufferUntil(' ');
 }
 //==================================================================
@@ -147,15 +151,13 @@ boolean testIfHeadphoneTaskDone() {
 
 // this function is called whenever serial information is recieved
 void serialEvent(Serial myPort) {
-  //println("got1");
-  
   //Do if info from the Headphone Module
   if (myPort == headphoneArduinoPort) {
-    headphoneArduinoPort.readBytesUntil('&', inBuffer);  //read in all data until '&' is encountered
+    headphoneArduinoPort.readBytesUntil('&', inBufferJack);  //read in all data until '&' is encountered
     
     
-    if (inBuffer != null) {
-      String myString = new String(inBuffer);
+    if (inBufferJack != null) {
+      String myString = new String(inBufferJack);
       //println(myString);
       String testForYes = "Y"; //Cant compare strings with == so this is the string it is being checked against
       
@@ -182,15 +184,46 @@ void serialEvent(Serial myPort) {
   }
   //Do if info from the RGB LED module
   else if (myPort == RGBLEDArduinoPort) {
-  println("serial event detected port 2");
+    RGBLEDArduinoPort.readBytesUntil(' ', inBufferLED);
+    //println(inBufferLED);
+    
+  //println("serial event detected port 2");
     //--------------code for recieving and parcing serial information from Arduino1 goes here------------------//
     /// check processing tutorial on serial communication (serial call/response) example
-    String myString = RGBLEDArduinoPort.readStringUntil(' ');
-    String[] a = splitTokens(myString, "a");
+   // String myString = RGBLEDArduinoPort.readStringUntil(' ');
+   // if(myString.length < 6) return;
+   if(inBufferLED != null) {
+     String myString = new String(inBufferLED);
+     //println(myString);
+     
+     char[] chars = new char[254];
+     chars = explode(myString);
+     println(chars);
+     
+     LED1StoppedOn = chars[3];
+     LED2StoppedOn = chars[6];
+    
+    // String[] full = splitTokens(myString, " ");
+    // if(full.length <2) return;
+    
+    //String[] a = splitTokens(full[0], "a");
+    //if(a[1] != null) {
+    // // LED1StoppedOn = a[0];
+    //  println(a[1]);
+    //}
+    
+    //String[] b = splitTokens(full[0], "b");
+    //LED2StoppedOn = b[1];
+    
+    //println(LED1StoppedOn);
+    //println(LED2StoppedOn);
+   }
+   
+   RGBLEDArduinoPort.clear();
     
   }
     
-    //Dummy code for the "button Mod"
+    //Dummy code for the "test button Mod"
   //  //println(myString);
   //  String[] b = splitTokens(myString, "b");
   //  println(b[1]);
@@ -203,9 +236,47 @@ void serialEvent(Serial myPort) {
 
 //This only has one if as a test. Need to add all possible task combinations of colors
 boolean testIfRGBLEDTaskDone() {
-  if (LEDtask == 0){
-    if(LED1StoppedOn == 1 && LED2StoppedOn == 2) return true;
-  }else return false;
+  //Converting the read string to an int for testing for complete
+  int LED1On = 6;
+  if(LED1StoppedOn == 'h') LED1On = 0;
+  if(LED1StoppedOn == 'i') LED1On = 1;
+  if(LED1StoppedOn == 'j') LED1On = 2;
+  if(LED1StoppedOn == 'k') LED1On = 3;
+  if(LED1StoppedOn == 'l') LED1On = 4;
+  if(LED1StoppedOn == 'm') LED1On = 5;
   
+  int LED2On = 6;
+  if(LED2StoppedOn == 'h') LED2On = 0;
+  if(LED2StoppedOn == 'i') LED2On = 1;
+  if(LED2StoppedOn == 'j') LED2On = 2;
+  if(LED2StoppedOn == 'k') LED2On = 3;
+  if(LED2StoppedOn == 'l') LED2On = 4;
+  if(LED2StoppedOn == 'm') LED2On = 5;
+  
+  if (LEDtask == 0){
+    if(LED1On == 1 && LED2On == 4) { //1 on Orange:  4 on Blue
+      RGBLEDArduinoPort.write('r');
+      LED1On = 6;
+      LED2On = 6;
+      LED1StoppedOn = ' ';
+      LED2StoppedOn = ' ';
+      return true;
+    }
+  }
   return false;
+}
+
+void convertStringToInt(String convert) {
+  LED1On = Integer.parseInt(convert);
+}
+
+char[] explode(String s) { // function explode
+ 
+  String theString = s;
+  char[] c = new char[theString.length()];
+ 
+  for (int i = 0; i < theString.length(); i++) {
+    c[i] = theString.charAt(i);
+  }
+  return c;
 }
