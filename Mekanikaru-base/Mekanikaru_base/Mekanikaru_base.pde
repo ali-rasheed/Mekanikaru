@@ -16,7 +16,10 @@ public int RGB1,RGB2;
 public int switchA,switchB,switchC,switchD,switchE;
 
 //jackValues
-public int jA1,jA2,jA3,jA4,jB1,jB2,jB3,jB4,jC1,jC2,jC3,jC4;
+public int jA;
+public int jB;
+public int jC;
+
 
 Serial dialArduino, LEDArduino, switchArduino, jackArduino;
 
@@ -30,7 +33,7 @@ float timer = 400;
 
 void setup() 
 {
-  size(400, 400);
+  size(600, 600);
 
    dialArduino = new Serial(this,"COM5", 9600);
    LEDArduino = new Serial(this, "COM4", 10600);
@@ -51,25 +54,29 @@ void setup()
   switchReceiver.observe("switchD");
   switchReceiver.observe("switchE");
   
-  dialReceiver.observe("dialVal");
+  //dialReceiver.observe("dialVal");
   
-  jackReceiver.observe("jA1");
-  jackReceiver.observe("jA2");
-  jackReceiver.observe("jB1");
-  jackReceiver.observe("jB2");
+  jackReceiver.observe("jA");
+  jackReceiver.observe("jB");
+  jackReceiver.observe("jC");
+  
   
   //dialReceiver.observe("analogValue2");
+  initializeJackMod();
 }
 
 void draw() 
 {
-  //LEDReceiver.observe("RGB1");
-  //LEDReceiver.observe("RGB2");
-  //switchReceiver.observe("switchA");
-  //switchReceiver.observe("switchB");
-  //switchReceiver.observe("switchC");
-  //switchReceiver.observe("switchD");
-  //dialReceiver.observe("dialVal");
+  jackReceiver.observe("jA");
+  jackReceiver.observe("jB");
+  jackReceiver.observe("jC");
+  LEDReceiver.observe("RGB1");
+  LEDReceiver.observe("RGB2");
+  switchReceiver.observe("switchA");
+  switchReceiver.observe("switchB");
+  switchReceiver.observe("switchC");
+  switchReceiver.observe("switchD");
+  dialReceiver.observe("dialVal");
   println("rgb1: " +RGB1);
   println("rgb1: " +RGB2);
   
@@ -81,10 +88,9 @@ void draw()
   
   println("dialVal: " +dialVal);
   
-  println("jackA1: " +jA1);
-  println("jackA2: " +jA2);
-  println("jackB1: " +jB1);
-  println("jackB2: " +jB2);
+  println("jackA: " +jA);
+  println("jackB: " +jB);
+  println("jackC: " +jC);
   
   //*****Playing The Game*****//
   
@@ -105,18 +111,24 @@ void draw()
   timer-= 0.1;
   
   //Playing Each Module
+  
     //Jack Module
     if(currentMod == 0){
     fill(0);
-    text(jackInstructions[jackTask],100,350);
+    textSize(28);
+    text("CONNECT", 220,300);
+    textSize(24);
+    text(jackModInstructions[0],220,350);
+    text(jackModInstructions[1],220,380);
+    text(jackModInstructions[2],220,410);
     fill(255);
     text(score, 50,50);
     
     if(testIfHeadphoneTaskDone() == true) {
       score++;
       timer = 400;
-      jackTask = (int)random(0,6);
-      currentMod = 1;
+      resetJackMod();
+      //currentMod = 1;
     }
     
     //LED Module
@@ -126,11 +138,11 @@ void draw()
     fill(255);
     text(score, 50, 50);
     
-    if(testIfLEDTaskDone() == true) {
-      score++;
-      timer = 400;
-      currentMod = 0;
-    }
+    //if(testIfLEDTaskDone() == true) {
+    //  score++;
+    //  timer = 400;
+    //  currentMod = 0;
+    //}
   }
   
   //Game Over Screen

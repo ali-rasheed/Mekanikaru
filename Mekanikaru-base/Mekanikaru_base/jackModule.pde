@@ -1,53 +1,70 @@
-int jackTask = 0; //0-Ain1,Bin2 1-Ain2,Bin1 2-AinNone, Bin1 3-AinNone, Bin2 4-Ain1, BinNone 5-Ain2, BinNone
+int numJacks = 5;
+int numPlugs = 3;
 
-              //    A | B
-              // 0: 1 | 2
-              // 1: 2 | 1
-              // 2: / | 1
-              // 3: / | 2
-              // 4: 1 | /
-              // 5: 2 | /
+int[] plugInstructions;
 
-String[] jackInstructions = {"Connect A to 1 and B to 2", "Connect A to 2 and B to 1", 
-                             "Disconnect A and Connect B to 1", "Disconnect A and Connect B to 2",
-                             "Connect A to 1 and Disconnect B", "Connect A to 2 and Disconnect B"};
+String[] jackModInstructions;
+
                              
 boolean testIfHeadphoneTaskDone() {
-  if(jackTask == 0){
-    if(jA1 == 1 && jA2 == 0 && jB1 == 0 && jB2 == 0){
-      return true;
-    }else return false;
+  int numCorrect = 0;
+  //println(plugInstructions);
+  
+  for(int i = 0; i < numPlugs; i++) {  //Check how many times for how man plugs exist
+    if(i == 0) {
+      if(jA == plugInstructions[i]) numCorrect++;
+    }
+    
+    if(i == 1) {
+      if(jB == plugInstructions[i]) numCorrect++;
+    }
+    
+    if(i == 2) {
+      if(jC == plugInstructions[i]) numCorrect++;
+    }
   }
   
-  if(jackTask == 1){
-    if(jA1 == 0 && jA2 == 0 && jB1 == 0 && jB2 == 0){
-      return true;
-    }else return false;
+  if(numCorrect >= numPlugs) return true;
+  else return false;
+  
+}
+
+void initializeJackMod(){
+  plugInstructions = new int[numPlugs];
+  jackModInstructions = new String[numPlugs];
+  
+  for(int i = 0; i < numPlugs; i++){
+    plugInstructions[i] = i;
+    plugInstructions[i]++;
+    
+    char c = (char) (i+65); // This converts the current position to a character. when i = 0 c = A, i = 1 c = B, ect.
+    jackModInstructions[i] = c + " to " + plugInstructions[i]; //Generates the instructiosn as A to num, B to num, ect. 
   }
   
-  if(jackTask == 2){
-    if(jA1 == 0 && jA2 == 0 && jB1 == 0 && jB2 == 0){
-      return true;
-    }else return false;
+}
+
+void resetJackMod(){
+  //Make an array containing all the jack numbers. For 8 its {1,2,3,4,5,6,7,8}
+  int[] stillAvailible = new int[numJacks];
+  for(int i = 0; i < stillAvailible.length; i++){
+    stillAvailible[i] = i+1;
   }
   
-  if(jackTask == 3){
-    if(jA1 == 0 && jA2 == 0 && jB1 == 0 && jB2 == 0){
-      return true;
-    }else return false;
+  //For each plug, pick a random jack to plug into, check if that plug has already been taken
+  for(int i = 0; i < numPlugs; i++){
+    int randomNum = (int)random(1,numJacks+1); //Pick a random number between 1 and the number of jacks
+    
+    while(stillAvailible[randomNum-1] == 0){
+      randomNum = (int)random(1,numJacks+1); //If the position = 0 it means its been taken, try picking another random spot
+    }
+    
+    stillAvailible[randomNum-1] = 0; //Remove the number from the still availible numbers
+    plugInstructions[i] = randomNum; //If the spot isn't taken (it got past the while loop) make the plug instrution equal that number 
   }
   
-  if(jackTask == 4){
-    if(jA1 == 0 && jA2 == 0 && jB1 == 0 && jB2 == 0){
-      return true;
-    }else return false;
+  //Resetting the string of instructions
+  for(int i = 0; i < numPlugs; i++){
+    char c = (char) (i+65); // This converts the current position to a character. when i = 0 c = A, i = 1 c = B, ect.
+    jackModInstructions[i] = c + " to " + plugInstructions[i]; //Generates the instructiosn as A to num, B to num, ect. 
   }
-  
-  if(jackTask == 5){
-    if(jA1 == 0 && jA2 == 0 && jB1 == 0 && jB2 == 0){
-      return true;
-    }else return false;
-  }
-  
-  return false;
 }
