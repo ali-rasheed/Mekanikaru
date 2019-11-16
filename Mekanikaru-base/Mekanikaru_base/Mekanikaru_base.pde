@@ -27,7 +27,7 @@ public int jC;
 Serial dialArduino, LEDArduino, switchArduino, jackArduino;
 
 //*****Game Values*****//
-int currentMod = 0; //0: Jack Mod
+int currentMod = 2; //0: Jack Mod
                     //1: LED Mod
                     //2: Switch Mod
                     //3: Dial Mod    
@@ -133,7 +133,7 @@ void draw()
     
     if(testIfHeadphoneTaskDone() == true) {
       score++;
-      timer = 400;
+      timer = 350;
       resetJackMod();
       currentMod = 1;
     }
@@ -146,7 +146,7 @@ void draw()
     
     if(ledTaskDone() == true) {
       score++;
-      timer = 400;
+      timer = 350;
       setLedInstruction();
       currentMod = 2;
     }
@@ -161,6 +161,7 @@ void draw()
     if(testIfSwitchTaskDone()) {
       score++;
       timer = 350;
+      setSwitchInstruction();
       currentMod = 0;
     }
     
