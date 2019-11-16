@@ -10,11 +10,13 @@ String[] ledColours = {"red","orange","yellow","green","blue","purple"};
 
 int led1A, led2A;
 
-String ledInstruction() {
+String ledInstructions;
+
+
+void setLedInstruction() {
   led1A = (int)random(0,5);
   led2A = (int)random(0,5);
-  String l = "Stop light A on " + ledColours[led1A] + ", and light B on " + ledColours[led2A] + ".";
-  return l;
+  ledInstructions = "Stop light A on " + ledColours[led1A] + ", and light B on " + ledColours[led2A] + ".";
 }
 
 boolean ledTaskDone() {
