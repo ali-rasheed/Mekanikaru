@@ -6,12 +6,14 @@ import vsync.*;
 
 //  We create a new ValueReceiver to receive values from the arduino
 ValueReceiver dialReceiver, LEDReceiver, switchReceiver,jackReceiver;
+ValueSender LEDSender;
 
 //Dial Values
 public int dialVal;
 
 //LED Values
 public int RGB1,RGB2;
+public int LEDReset;
 
 //switch Values
 public int switchA,switchB,switchC,switchD,switchE;
@@ -25,7 +27,7 @@ public int jC;
 Serial dialArduino, LEDArduino, switchArduino, jackArduino;
 
 //*****Game Values*****//
-int currentMod = 1; //0: Jack Mod
+int currentMod = 0; //0: Jack Mod
                     //1: LED Mod
                     //2: Switch Mod
                     //3: Dial Mod    
@@ -40,12 +42,13 @@ void setup()
   
   bg = loadImage("267Background.png");
 
-  println(Serial.list());
-   dialArduino = new Serial(this,"COM5", 9600);
-   LEDArduino = new Serial(this, "COM4", 10600);
-   switchArduino = new Serial(this, Serial.list()[1], 5000);
-   jackArduino = new Serial(this, Serial.list()[1], 12600);
-   dialReceiver = new ValueReceiver(this, dialArduino);
+   //dialArduino = new Serial(this,"COM5", 9600);
+   LEDArduino = new Serial(this, "COM3", 9600);
+   LEDSender = new ValueSender(this, LEDArduino);
+   LEDReset = 0;
+   switchArduino = new Serial(this, "COM4", 5000);
+   jackArduino = new Serial(this, "COM5", 12600);
+   //dialReceiver = new ValueReceiver(this, dialArduino);
    LEDReceiver = new ValueReceiver(this, LEDArduino);
    switchReceiver = new ValueReceiver(this, switchArduino);
    jackReceiver = new ValueReceiver(this, jackArduino);
@@ -56,6 +59,8 @@ void setup()
   
   LEDReceiver.observe("RGB1");
   LEDReceiver.observe("RGB2");
+  LEDReceiver.observe("LEDReset");
+  LEDSender.observe("LEDReset");
   
   switchReceiver.observe("switchA");
   switchReceiver.observe("switchB");
@@ -77,7 +82,8 @@ void setup()
 }
 
 void draw() 
-{ 
+{
+  LEDReset = 0;
   //println("rgb1: " +RGB1);
   //println("rgb1: " +RGB2);
   

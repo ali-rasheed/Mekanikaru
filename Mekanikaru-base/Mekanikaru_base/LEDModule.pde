@@ -12,11 +12,11 @@ int led1A, led2A;
 
 String ledInstructions;
 
-
 void setLedInstruction() {
   led1A = (int)random(0,5);
   led2A = (int)random(0,5);
   ledInstructions = "Stop light A on " + ledColours[led1A] + ", and light B on " + ledColours[led2A] + ".";
+  LEDReset = 1;
 }
 
 boolean ledTaskDone() {
