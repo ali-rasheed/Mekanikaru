@@ -1,8 +1,11 @@
 #include <VSync.h>
 
-ValueSender<2> sender;
+ValueSender<3> sender;
 int RGB1;
 int RGB2;
+
+ValueReceiver<1> receiver;
+int LEDReset;
 
 int red[] = {255,0,0};
 int orange[] = {200,20,0};
@@ -45,6 +48,8 @@ void setup() {
   Serial.begin(9600);
   sender.observe(RGB1);
   sender.observe(RGB2);
+  sender.observe(LEDReset);
+  receiver.observe(LEDReset);
 }
 
 void loop() {
@@ -100,6 +105,11 @@ void loop() {
 
   checkLED1();
   checkLED2();
+
+  //SYNC SENDER AND RECEIVER//
+
+  sender.sync();
+  receiver.sync();
   
 }
 
@@ -159,8 +169,6 @@ void checkLED2() {
   if (colour2 == 5) {
     goPurple2();
   }
-
-  sender.sync();
   
 }
 
@@ -250,10 +258,8 @@ void reset() {
 }
 
 void resetListen() {
-  if (Serial.available() > 0) {
-    char state = Serial.read();
-    if (state == 'r') {
-      reset();
-    }
+  if (LEDReset == 1) {
+    reset();
+    LEDReset = 0;
   }
 }
