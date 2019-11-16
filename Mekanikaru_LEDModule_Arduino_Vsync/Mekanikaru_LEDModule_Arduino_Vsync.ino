@@ -11,6 +11,8 @@ int green[] = {0,100,0};
 int blue[] = {0,0,150};
 int purple[] = {150,0,175};
 
+char colourChar[] = {'h','i','j','k','l','m'};
+
 int button1 = 12;
 int button2 = 13;
 
@@ -40,7 +42,7 @@ long interval2 = 1000;
 void setup() {
   pinMode(button1, INPUT);
   pinMode(button2, INPUT);
-  Serial.begin(10600);
+  Serial.begin(9600);
   sender.observe(RGB1);
   sender.observe(RGB2);
 }

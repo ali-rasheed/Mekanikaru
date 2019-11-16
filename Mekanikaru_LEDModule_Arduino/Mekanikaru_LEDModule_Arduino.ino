@@ -1,3 +1,9 @@
+#include <VSync.h>
+
+ValueSend<2> sender;
+int RGB1;
+int RGB2;
+
 int red[] = {255,0,0};
 int orange[] = {200,20,0};
 int yellow[] = {255,70,0};
@@ -37,6 +43,8 @@ void setup() {
   pinMode(button1, INPUT);
   pinMode(button2, INPUT);
   Serial.begin(9600);
+  sender.observe(RGB1);
+  sender.observe(RGB2);
 }
 
 void loop() {
@@ -123,16 +131,11 @@ void checkLED1() {
 
 void sendColours() {
   if (cycle1 == false) {
-    Serial.print("a");
-    Serial.print(colourChar[colour1]);
-    Serial.print("a");
+    RGB1 = colour1;
   }
   if (cycle2 == false) {
-    Serial.print("b");
-    Serial.print(colourChar[colour2]);
-    Serial.print("b");
+    RGB2 = colour2;
   }
-  Serial.println(" ");
 }
 
 // CHECK COLOURS //
@@ -156,6 +159,9 @@ void checkLED2() {
   if (colour2 == 5) {
     goPurple2();
   }
+
+  sender.sync();
+  
 }
 
 // SET COLOURS //
