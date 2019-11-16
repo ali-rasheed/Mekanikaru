@@ -1,6 +1,6 @@
 #include <VSync.h>
 
-ValueSend<2> sender;
+ValueSender<2> sender;
 int RGB1;
 int RGB2;
 
