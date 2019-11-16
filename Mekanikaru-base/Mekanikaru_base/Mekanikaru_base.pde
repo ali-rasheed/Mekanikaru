@@ -6,11 +6,12 @@ import vsync.*;
 
 //  We create a new ValueReceiver to receive values from the arduino
 ValueReceiver dialReceiver, LEDReceiver, switchReceiver,jackReceiver;
-ValueSender LEDSender;
+ValueSender LEDSender, dialSender;
+
 
 //Dial Values
 public int dialVal;
-
+public int leftGauge, rightGauge, targetDial, confirm;
 //LED Values
 public int RGB1,RGB2;
 public int LEDReset;
@@ -42,13 +43,14 @@ void setup()
   
   bg = loadImage("267Background.png");
 
-   //dialArduino = new Serial(this,"COM5", 9600);
-   LEDArduino = new Serial(this, "COM3", 9600);
+   dialArduino = new Serial(this,"COM5", 11000);
+   LEDArduino = new Serial(this, "COM4", 9600);
    LEDSender = new ValueSender(this, LEDArduino);
+   dialSender = new ValueSender(this, dialArduino);
    LEDReset = 0;
-   switchArduino = new Serial(this, "COM4", 5000);
-   jackArduino = new Serial(this, "COM5", 12600);
-   //dialReceiver = new ValueReceiver(this, dialArduino);
+   switchArduino = new Serial(this, "COM3", 5000);
+   jackArduino = new Serial(this, "COM6", 12600);
+   dialReceiver = new ValueReceiver(this, dialArduino);
    LEDReceiver = new ValueReceiver(this, LEDArduino);
    switchReceiver = new ValueReceiver(this, switchArduino);
    jackReceiver = new ValueReceiver(this, jackArduino);
@@ -68,17 +70,21 @@ void setup()
   switchReceiver.observe("switchD");
   switchReceiver.observe("switchE");
   
-  //dialReceiver.observe("dialVal");
+  dialReceiver.observe("dialVal");
+  dialReceiver.observe("confirm");
+  dialSender.observe("leftGauge");
+  dialSender.observe("rightGauge");
+  
   
   jackReceiver.observe("jA");
   jackReceiver.observe("jB");
   jackReceiver.observe("jC");
   
   
-  //dialReceiver.observe("analogValue2");
   initializeJackMod();
   setSwitchInstruction();
   setLedInstruction();
+  dialSet();
 }
 
 void draw() 
@@ -164,11 +170,16 @@ void draw()
       setSwitchInstruction();
       currentMod = 0;
     }
+    dialSet();
     
     
   }else if (currentMod == 3) {
-    
+    checkDialMatch();
   }
+  
+        text("the target gauge: " +targetDial, 690,690);
+        text("the current gauge: " +dialVal, 690,730);
+
   
   //Drawing Score
   fill(255);
