@@ -47,8 +47,8 @@ void dialSet() {
 
 
   targetDial = setTargetDial(leftGauge, rightGauge);
-  println("left: "+leftGauge);
-println("right: "+ rightGauge);
+//  println("left: "+leftGauge);
+//println("right: "+ rightGauge);
 }
 
 
@@ -59,7 +59,7 @@ void checkDialMatch() {
   if (dialVal <targetDial+ 2 && dialVal > targetDial -2) {
     if (confirm<1) {
       dialTaskDone = true;
-      println("round won");
+      //println("round won");
     }
   }
 }
