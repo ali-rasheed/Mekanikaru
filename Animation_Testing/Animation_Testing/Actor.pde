@@ -1,6 +1,8 @@
 class Actor {
   
   float xPos, yPos, actorW, actorH;
+  boolean idle;
+  PImage sprite;
   
   Actor(float x, float y, float w, float h) {
     xPos = x;
@@ -10,11 +12,7 @@ class Actor {
   }
   
   void render() {
-    fill(0);
-    noStroke();
-    ellipse(xPos,yPos,actorW,actorH);
+    image(sprite,xPos-sprite.width/2,yPos-sprite.height/2);
   }
-  
-  
   
 }
