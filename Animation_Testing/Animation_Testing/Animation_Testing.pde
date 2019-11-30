@@ -11,6 +11,9 @@ int yUnit;
 ArrayList<Module> modules = new ArrayList<Module>();
 ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 
+float timer = 0;
+float setTransparency = 0;
+
 
 
 //TO GO INTO SETUP
@@ -27,14 +30,17 @@ void setup() {
   yUnit = displayHeight/9;
   
   Module aniModule = new Module( 1*xUnit, 1*yUnit, 10*xUnit, 7*yUnit );
-  Module tempModule = new Module( 12*xUnit, 1*yUnit, 2*xUnit, 7*yUnit );
+  Module tempModule = new Module( 12*xUnit, 3*yUnit, 2*xUnit, 5*yUnit );
+  Module scoreModule = new Module( 12*xUnit, 1*yUnit, 2*xUnit, 1*xUnit );
   modules.add(aniModule);
   modules.add(tempModule);
+  modules.add(scoreModule);
   
-  player = new Player( aniModule.xPos + 2*xUnit, aniModule.yPos + aniModule.modH/2, 1*yUnit, 1*yUnit);
-  enemy = new Enemy( aniModule.xPos + 8*xUnit, aniModule.yPos + aniModule.modH/2, 1.5*yUnit, 1.5*yUnit);
+  player = new Player( aniModule.xPos + 3*xUnit, aniModule.yPos + aniModule.modH/2, 1*yUnit, 1*yUnit);
+  enemy = new Enemy( aniModule.xPos + 7*xUnit, aniModule.yPos + aniModule.modH/2, 1*yUnit, 1*yUnit);
   
   player.setAnimations();
+  player.transparency = 255;
 }
 
 
@@ -45,6 +51,13 @@ void draw() {
   drawModules();
   enemy.render();
   player.render();
+  timer++;
+  if (setTransparency <= 20) {
+    setTransparency++;
+  }
+  if (setTransparency == 20) {
+    player.transparency = 255;
+  }
 }
 
 
@@ -67,14 +80,28 @@ void playerAttack() {
   enemy.recoil();
 }
 
+void playerDefeat() {
+  player.attack();
+  enemy.die();
+}
+
 void enemyAttack() {
   enemy.attack();
   player.recoil();
 }
 
+void enemyDefeat() {
+  enemy.attack();
+  player.die();
+}
+
 void resetPlayerSpeed() {
   player.idleSpeed = 0.2;
 }
+
+
+
+//TESTING
 
 void keyPressed() {
   if (key == 'q') {
@@ -85,5 +112,11 @@ void keyPressed() {
   }
   if (key == ' ') {
     resetPlayerSpeed();
+  }
+  if (key == 'w') {
+    playerDefeat();
+  }
+  if (key == 'o') {
+    enemyDefeat();
   }
 }

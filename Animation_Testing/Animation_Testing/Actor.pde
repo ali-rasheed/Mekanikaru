@@ -11,8 +11,6 @@ class Actor {
     actorH = h;
   }
   
-  void render() {
-    image(sprite,xPos-sprite.width/2,yPos-sprite.height/2);
-  }
+  float transparency = 255;
   
 }
