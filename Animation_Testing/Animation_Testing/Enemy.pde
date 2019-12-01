@@ -6,7 +6,7 @@ class Enemy extends Actor {
   Enemy(float x, float y, float w, float h) {
     super(x, y, w, h);
     sprite = loadImage("Monster.png");
-    sprite2 = loadImage("Monster2.png");
+    sprite2 = loadImage("Monster.png");
     sprite3 = loadImage("Monster.png");
     sprite.resize(sprite.width/2,sprite.height/2);
     sprite2.resize(sprite2.width/2,sprite2.height/2);

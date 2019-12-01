@@ -17,7 +17,6 @@ float setTransparency = 0;
 PImage background;
 
 PFont scoreFont;
-PFont numFont;
 
 
 
@@ -39,7 +38,7 @@ void setup() {
   Module scoreModule = new Module( 12*xUnit, 1*yUnit, 2*xUnit, 1*xUnit );
   modules.add(aniModule);
   modules.add(tempModule);
-  modules.add(scoreModule);
+  //modules.add(scoreModule);
   
   player = new Player( aniModule.xPos + 3*xUnit, aniModule.yPos + yUnit*4.5, 1*yUnit, 1*yUnit);
   enemy = new Enemy( aniModule.xPos + 7*xUnit, aniModule.yPos + yUnit*4.5, 1*yUnit, 1*yUnit);
@@ -50,8 +49,7 @@ void setup() {
   background = loadImage("Background.png");
   background.resize(xUnit*10,yUnit*7);
   
-  scoreFont = createFont("Roboto_Mono/RobotoMono-Bold.ttf", 20);
-  numFont = createFont("Roboto_Mono/RobotoMono-Bold.ttf", 100);
+  scoreFont = createFont("Roboto_Mono/RobotoMono-Bold.ttf", 42);
 }
 
 
@@ -61,7 +59,6 @@ void setup() {
 void draw() {
   drawModules();
   drawBackground();
-  drawRoundCount();
   enemy.render();
   player.render();
   timer++;
@@ -89,11 +86,7 @@ void drawBackground() {
 }
 
 void drawRoundCount() {
-  textFont(scoreFont);
-  fill(0);
-  text("ROUND",12.1*xUnit,2*yUnit);
-  textFont(numFont);
-  text("00",12.7*xUnit,2*yUnit);
+  text("ROUND",12*xUnit,1*xUnit);
 }
 
 
