@@ -35,6 +35,7 @@ PrintWriter highScoreWriting;
 
 //JSON Array for high score
 JSONArray jsonArray;
+JSONArray jsonArrayNumbers, jsonArrayNames;
 
 //  We create a new ValueReceiver to receive values from the arduino
 ValueReceiver dialReceiver, LEDReceiver, switchReceiver, jackReceiver;
@@ -155,10 +156,13 @@ void setup()
   timerWindow = new SecondWindow();
   
   //HighScore Writing
-  highScoreWriting = createWriter("highScores.txt");
+  //highScoreWriting = createWriter("highScores.txt");
   
   //JSON array
-  jsonArray = loadJSONArray("JsonTest/highScore.json");
+  //jsonArray = loadJSONArray("JsonTest/data.json");
+  
+  jsonArrayNumbers = loadJSONArray("JsonTest/highScoreNumbers.json");
+  jsonArrayNames = loadJSONArray("JsonTest/highScoreNames.json");
 
 
 if(testingWithoutArduinos == false) {
@@ -278,14 +282,7 @@ void draw()
     background(bg);
     
       //Switch Mod
-      if (modStatus[0]) {
-        //Old testing
-        //fill(250);
-        //textSize(18);
-        //text(switchInstructions, 690, 220);
-        //text(switchInstructions2, 690, 250);
-        //text(switchInstructions3, 690, 280);
-        
+      if (modStatus[0]) {        
         drawSwitchMod();
     
         if (testIfSwitchTaskDone() == true) {
@@ -296,32 +293,15 @@ void draw()
       //Dial Mod
       if (modStatus[1]) {
         checkDialMatch();
-        
-        //Old testing
-        //textSize(15);
-        //text("the target gauge: " +targetDial, 690, 960);
-        //text("the current gauge: " +dialVal, 690, 980);
-        //text("the current gauge: " +confirm, 690, 990);
-        
         drawDialMod();
         
         if (dialTaskDone == true){
-          //completedDial(); //Auto-winning right now
+          completedDial(); //Auto-winning right now
         }
       }
   
       //Jack Module
-      if (modStatus[2]) {
-        //Old Testing
-        //fill(250);
-        //textSize(28);
-        //text("CONNECT", 180, 180);
-        //textSize(24);
-        //text(jackModInstructions[0], 200, 220);
-        //text(jackModInstructions[1], 200, 250);
-        //text(jackModInstructions[2], 200, 280);
-        //fill(255);
-        
+      if (modStatus[2]) {      
         drawJackMod();
     
         if (testIfHeadphoneTaskDone() == true) {
@@ -331,11 +311,6 @@ void draw()
   
      //LED Module
       if (modStatus[3]) {
-        //Old Testing
-        //fill(255);
-        //textSize(16);
-        //text(ledInstructions, 76, 680);
-        
         drawLEDMod();
     
         if (ledTaskDone() == true) {
@@ -454,7 +429,7 @@ boolean compareBooleanArrays(boolean[] a, boolean[] b){
     else return false;
 }
 
-//Cheating
+//Cheatings
 void keyPressed(){
   if(keyCode == UP) newRound();
   if(key == 'r'){
@@ -463,9 +438,28 @@ void keyPressed(){
   
   //Testing pressing enter on the game over screen
   if(keyCode == ENTER && isGameOver) {
-    //This saves the score to the JSON file
-    jsonArray.append(name + " : " + score);
-    saveJSONArray(jsonArray, "JsonTest/highScore.json");
+    //JSONObject player = new JSONObject();
+    
+    //player.setInt("score", score);
+    //player.setString("name", name);
+    
+    //jsonArray.append(player);
+    
+    //saveJSONArray(jsonArray, "JsonTest/data.json");
+    
+    
+    ////This saves the score to the JSON file
+    //jsonArrayNumbers.append(name + " : " + score);
+    //saveJSONArray(jsonArrayNumbers, "JsonTest/highScoreNumbers.json");
+    
+    //jsonArrayNames.append(name + " : " + score);
+    //saveJSONArray(jsonArrayNames, "JsonTest/highScoreNames.json");
+    
+    jsonArrayNumbers.append(score);
+    saveJSONArray(jsonArrayNumbers, "JsonTest/highScoreNumbers.json");
+    
+    jsonArrayNames.append(name);
+    saveJSONArray(jsonArrayNames, "JsonTest/highScoreNames.json");
     
     //Reset the game
     resetGame();
@@ -527,19 +521,19 @@ void keyPressed(){
   if(key == '4') if(modStatus[3]) completedLED();
   
   //Animation testing, not working
-  //if (key == 'q') {
-  //  timerWindow.playerAttack();
-  //}
-  //if (key == 'p') {
-  //  timerWindow.enemyAttack();
-  //}
-  //if (key == ' ') {
-  //  timerWindow.resetPlayerSpeed();
-  //}
-  //if (key == 'w') {
-  // timerWindow.playerDefeat();
-  //}
-  //if (key == 'o') {
-  //  timerWindow.enemyDefeat();
-  //}
+  if (key == 'q') {
+    timerWindow.playerAttack();
+  }
+  if (key == 'p') {
+    timerWindow.enemyAttack();
+  }
+  if (key == ' ') {
+    timerWindow.resetPlayerSpeed();
+  }
+  if (key == 'w') {
+   timerWindow.playerDefeat();
+  }
+  if (key == 'o') {
+    timerWindow.enemyDefeat();
+  }
 }

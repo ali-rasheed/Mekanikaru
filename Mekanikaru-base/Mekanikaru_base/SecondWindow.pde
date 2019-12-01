@@ -11,36 +11,38 @@ class SecondWindow extends PApplet {
   }
   
   public void settings() {
-   size(1000,1000);
+   //size(1000,1000);
+   size(displayWidth, displayHeight);
    //fullScreen();
+   //fullScreen(2); //This should open it on the second monitor
 
   }
   
   public void setup() {
     surface.setTitle("Timer");
     
-       smooth();
-  Ani.init(this);
-  background(0);
-  
-  fill(255);
-  stroke(255);
-  
-  xUnit = displayWidth/15;
-  yUnit = displayHeight/9;
-  
-  Module aniModule = new Module( 1*xUnit, 1*yUnit, 10*xUnit, 7*yUnit );
-  Module tempModule = new Module( 12*xUnit, 3*yUnit, 2*xUnit, 5*yUnit );
-  Module scoreModule = new Module( 12*xUnit, 1*yUnit, 2*xUnit, 1*xUnit );
-  modules.add(aniModule);
-  modules.add(tempModule);
-  modules.add(scoreModule);
-  
-  player = new Player( aniModule.xPos + 3*xUnit, aniModule.yPos + aniModule.modH/2, 1*yUnit, 1*yUnit);
-  enemy = new Enemy( aniModule.xPos + 7*xUnit, aniModule.yPos + aniModule.modH/2, 1*yUnit, 1*yUnit);
-  
-  player.setAnimations();
-  player.transparency = 255;
+    smooth();
+    Ani.init(this);
+    //background(0);
+    
+    fill(255);
+    stroke(255);
+    
+    xUnit = displayWidth/15;
+    yUnit = displayHeight/9;
+    
+    Module aniModule = new Module( 1*xUnit, 1*yUnit, 10*xUnit, 7*yUnit );
+    Module tempModule = new Module( 12*xUnit, 3*yUnit, 2*xUnit, 5*yUnit );
+    Module scoreModule = new Module( 12*xUnit, 1*yUnit, 2*xUnit, 1*xUnit );
+    modules.add(aniModule);
+    modules.add(tempModule);
+    modules.add(scoreModule);
+    
+    player = new Player( aniModule.xPos + 3*xUnit, aniModule.yPos + aniModule.modH/2, 1*yUnit, 1*yUnit);
+    enemy = new Enemy( aniModule.xPos + 7*xUnit, aniModule.yPos + aniModule.modH/2, 1*yUnit, 1*yUnit);
+    
+    player.setAnimations();
+    player.transparency = 255;
     
   }
   
@@ -56,11 +58,10 @@ class SecondWindow extends PApplet {
     //text("EnemyAttacks " + enemyAttacks, 100,400);
     //background(200);
     
-    background(255);
+    background(0);
     drawModules();
     enemy.render();
     player.render();
-    //timer++;
     if (setTransparency <= 20) {
       setTransparency++;
     }
@@ -106,20 +107,4 @@ void drawModules() {
   void resetPlayerSpeed() {
     player.idleSpeed = 0.2;
   }
-  
-  //void playerAttack() {
-  //  playerAttacks++;
-  ////player.attack();
-  ////enemy.recoil();
-  //}
-
-  //void enemyAttack() {
-  //  enemyAttacks++;
-  //  //enemy.attack();
-  //  //player.recoil();
-  //}
-  
-  //void resetPlayerSpeed() {
-  //  resetPlayerSpeed++;
-  ////player.idleSpeed = 0.2;
 }

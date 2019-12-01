@@ -10,9 +10,9 @@ class Module {
   }
   
   void render() {
-    //fill(255);
+    timerWindow.fill(255);
     noStroke();
-    //rect(xPos,yPos,modW,modH);
+    timerWindow.rect(xPos,yPos,modW,modH);
   }
   
 }
