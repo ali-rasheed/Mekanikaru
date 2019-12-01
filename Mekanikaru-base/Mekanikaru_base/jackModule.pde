@@ -1,16 +1,35 @@
-int numJacks = 5;
-int numPlugs = 3;
+int numJacks = 8;
+int numPlugs = 5;
 
 int[] plugInstructions;
 
-String[] jackModInstructions;
+int[] letterPos = new int[numPlugs]; 
+int[] numberPos = new int[numJacks];
+
+//String[] jackModInstructions;
+
+void drawJackMod(){
+  image(jackBg, jackPos.x+xOffset, jackPos.y+yOffset);
+  
+  pushMatrix();
+  translate(jackPos.x, jackPos.y);
+  strokeWeight(3);
+  stroke(255);
+  for(int i =0; i < numPlugs; i++){
+    line(78,letterPos[i], 318,numberPos[plugInstructions[i]-1]);
+  }
+  
+  //println(plugInstructions);
+  
+  
+  popMatrix();
+}
 
                              
 boolean testIfHeadphoneTaskDone() {
   int numCorrect = 0;
-  //println(plugInstructions);
   
-  for(int i = 0; i < numPlugs; i++) {  //Check how many times for how man plugs exist
+  for(int i = 0; i < numPlugs; i++) {  //Check how many times for how many plugs exist
     if(i == 0) {
       if(jA == plugInstructions[i]) numCorrect++;
     }
@@ -31,14 +50,23 @@ boolean testIfHeadphoneTaskDone() {
 
 void initializeJackMod(){
   plugInstructions = new int[numPlugs];
-  jackModInstructions = new String[numPlugs];
+  //jackModInstructions = new String[numPlugs];
   
   for(int i = 0; i < numPlugs; i++){
     plugInstructions[i] = i;
     plugInstructions[i]++;
     
-    char c = (char) (i+65); // This converts the current position to a character. when i = 0 c = A, i = 1 c = B, ect.
-    jackModInstructions[i] = c + " to " + plugInstructions[i]; //Generates the instructiosn as A to num, B to num, ect. 
+    //char c = (char) (i+65); // This converts the current position to a character. when i = 0 c = A, i = 1 c = B, ect.
+    //jackModInstructions[i] = c + " to " + plugInstructions[i]; //Generates the instructiosn as A to num, B to num, ect. 
+  }
+  
+  //Creating the positions for the numbers
+  for(int i = 0; i < numberPos.length; i++){
+    numberPos[i] = 10+(i*23);
+  }
+  //Creating the positions for the letters
+  for(int i = 0; i < letterPos.length; i++){
+    letterPos[i] = 21+(i*35);
   }
   
 }
@@ -63,8 +91,8 @@ void resetJackMod(){
   }
   
   //Resetting the string of instructions
-  for(int i = 0; i < numPlugs; i++){
-    char c = (char) (i+65); // This converts the current position to a character. when i = 0 c = A, i = 1 c = B, ect.
-    jackModInstructions[i] = c + " to " + plugInstructions[i]; //Generates the instructiosn as A to num, B to num, ect. 
-  }
+  //for(int i = 0; i < numPlugs; i++){
+  //  char c = (char) (i+65); // This converts the current position to a character. when i = 0 c = A, i = 1 c = B, ect.
+  //  jackModInstructions[i] = c + " to " + plugInstructions[i]; //Generates the instructiosn as A to num, B to num, ect. 
+  //}
 }

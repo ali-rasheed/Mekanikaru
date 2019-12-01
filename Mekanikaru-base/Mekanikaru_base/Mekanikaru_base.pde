@@ -2,6 +2,27 @@
 import processing.serial.*;
 import vsync.*;
 
+//Multiple Screens
+SecondWindow timerWindow;
+
+//Main Screen Values
+int xUnit;
+int yUnit;
+int modHeight;
+int modWidth;
+
+int xOffset = -10;
+int yOffset = -30;
+
+//Module positions
+PVector switchPos, dialPos, jackPos, LEDPos;
+
+
+//Writing the highScore with .txt file
+PrintWriter highScoreWriting;
+
+//JSON Array for high score
+JSONArray jsonArray;
 
 //  We create a new ValueReceiver to receive values from the arduino
 ValueReceiver dialReceiver, LEDReceiver, switchReceiver, jackReceiver;
@@ -20,12 +41,14 @@ public int RGB1, RGB2;
 public int LEDReset;
 
 //switch Values
-public int switchA, switchB, switchC, switchD, switchE;
+public int switchA, switchB, switchC, switchD, switchE, switchF, switchG, switchH, switchI, switchJ;
 
 //jackValues
 public int jA;
 public int jB;
 public int jC;
+public int jD;
+public int jE;
 
 //*****Game Values*****//
 //If the Mod is active or not, the current status. These switch off as the round progresses
@@ -65,19 +88,66 @@ int level3Round = 0;
 
 //Tracking game values
 int score = 0;
-float maxTimer = 400;
+float maxTimer = 1000;
 float timer = maxTimer;
 
-PImage bg;
+boolean isGameOver;
+
+//Game over screen
+int letter1 = 65; //Int version of a
+int letter2 = 65;
+int letter3 = 65;
+int letterSelected = 1;
+String name;
+
+PImage bg, switchBg, dialBg, jackBg, LEDBg;
 
 //***Testing Stuff***//
 boolean testingWithoutArduinos = true;
 
+void settings() {
+  bg = loadImage("Assets/Background.png");
+  switchBg = loadImage("Assets/SwitchMod.png");
+  dialBg = loadImage("Assets/DialMod.png");
+  jackBg = loadImage("Assets/JackMod.png");
+  LEDBg = loadImage("Assets/LEDMod.png");
+  
+  //Resize the image to not be fullscreen for testing
+  bg.resize(0,540);
+  switchBg.resize(0,240);
+  dialBg.resize(0,240);
+  jackBg.resize(0,240);
+  LEDBg.resize(0,240);
+  
+
+  size(bg.width, bg.height);
+  
+}
+
 void setup() 
 {
-  size(1002, 1002);
+  
+  //Main Window
+  xUnit = width/15;
+  yUnit = height/9;
+  modHeight = yUnit*3;
+  modWidth = xUnit*6;
+  
+  //Mod Positions
+  switchPos = new PVector(1*xUnit, 1*yUnit);
+  dialPos = new PVector(8*xUnit, 1*yUnit);
+  jackPos = new PVector(1*xUnit, 5*yUnit);
+  LEDPos = new PVector(8*xUnit, 5*yUnit);
+  
+  //Second Window
+  timerWindow = new SecondWindow();
+  
+  //HighScore Writing
+  highScoreWriting = createWriter("highScores.txt");
+  
+  //JSON array
+  jsonArray = loadJSONArray("JsonTest/highScore.json");
 
-  bg = loadImage("267Background.png");
 
 if(testingWithoutArduinos == false) {
   dialArduino = new Serial(this, "COM5", 11000);
@@ -86,15 +156,11 @@ if(testingWithoutArduinos == false) {
   dialSender = new ValueSender(this, dialArduino);
   LEDReset = 0;
   switchArduino = new Serial(this, "COM3", 5000);
-  jackArduino = new Serial(this, "COM6", 12600);
+  jackArduino = new Serial(this, "COM2", 12600);
   dialReceiver = new ValueReceiver(this, dialArduino);
   LEDReceiver = new ValueReceiver(this, LEDArduino);
   switchReceiver = new ValueReceiver(this, switchArduino);
   jackReceiver = new ValueReceiver(this, jackArduino);
-
-  // Tell the ValueReceiver what variable you want to synchronize from the arduino to this sketch.
-  //dialReceiver.observe("analogValue1");
-  //switchReceiver.observe("analogValue1");
 
   LEDReceiver.observe("RGB1");
   LEDReceiver.observe("RGB2");
@@ -106,6 +172,11 @@ if(testingWithoutArduinos == false) {
   switchReceiver.observe("switchC");
   switchReceiver.observe("switchD");
   switchReceiver.observe("switchE");
+  switchReceiver.observe("switchF");
+  switchReceiver.observe("switchG");
+  switchReceiver.observe("switchH");
+  switchReceiver.observe("switchI");
+  switchReceiver.observe("switchJ");
 
   dialReceiver.observe("dialVal");
   dialReceiver.observe("confirm");
@@ -117,12 +188,14 @@ if(testingWithoutArduinos == false) {
   jackReceiver.observe("jA");
   jackReceiver.observe("jB");
   jackReceiver.observe("jC");
+  jackReceiver.observe("jD");
+  jackReceiver.observe("jE");
 }
 
   //Init the allModsOff array
   for (int i =0; i < allModsOff.length; i++){
-      allModsOff[i] = false;
-   }
+    allModsOff[i] = false;
+  }
    
   //Start all Mods as being off
   for (int i =0; i < modStatus.length; i++){
@@ -132,9 +205,10 @@ if(testingWithoutArduinos == false) {
   modStatus[0] = true;
 
   initializeJackMod();
+  initLEDMod();
   setSwitchInstruction();
-  setLedInstruction();
-  //dialSet();
+  //setLedInstruction();
+  dialSet();
 }
 
 void draw() 
@@ -152,29 +226,31 @@ void draw()
 
   //println("dialVal: " +dialVal);
 
-  //println("jackA: " +jA);
-  //println("jackB: " +jB);
-  //println("jackC: " +jC);
-  
+  println("jackA: " +jA);
+  println("jackB: " +jB);
+  println("jackC: " +jC);
+  println("jackC: " +jD);
+  println("jackC: " +jC);
+
   //Testing
-  println(modStatus);
+  //println(modStatus);
   
-  print("Level 0 Round ");
-  println(level0Round);
+  //print("Level 0 Round ");
+  //println(level0Round);
   
-  print("Level 1 Round ");
-  println(level1Round);
+  //print("Level 1 Round ");
+  //println(level1Round);
   
-  print("Level 2 Round ");
-  println(level2Round);
+  //print("Level 2 Round ");
+  //println(level2Round);
   
-  print("Level 3 Round ");
-  println(level3Round);
+  //print("Level 3 Round ");
+  //println(level3Round);
   
-  print("Game Level");
-  println(gameLevel);
+  //print("Game Level");
+  //println(gameLevel);
   
-  println(millis());
+  //println(millis());
   
 
   //***Reset Each Draw***//
@@ -191,11 +267,14 @@ void draw()
     
       //Switch Mod
       if (modStatus[0]) {
-        fill(250);
-        textSize(18);
-        text(switchInstructions, 690, 220);
-        text(switchInstructions2, 690, 250);
-        text(switchInstructions3, 690, 280);
+        //Old testing
+        //fill(250);
+        //textSize(18);
+        //text(switchInstructions, 690, 220);
+        //text(switchInstructions2, 690, 250);
+        //text(switchInstructions3, 690, 280);
+        
+        drawSwitchMod();
     
         if (testIfSwitchTaskDone() == true) {
           completedSwitch();
@@ -206,10 +285,13 @@ void draw()
       if (modStatus[1]) {
         checkDialMatch();
         
-        textSize(15);
-        text("the target gauge: " +targetDial, 690, 960);
-        text("the current gauge: " +dialVal, 690, 980);
-        text("the current gauge: " +confirm, 690, 990);
+        //Old testing
+        //textSize(15);
+        //text("the target gauge: " +targetDial, 690, 960);
+        //text("the current gauge: " +dialVal, 690, 980);
+        //text("the current gauge: " +confirm, 690, 990);
+        
+        drawDialMod();
         
         if (dialTaskDone == true){
           //completedDial(); //Auto-winning right now
@@ -218,14 +300,17 @@ void draw()
   
       //Jack Module
       if (modStatus[2]) {
-        fill(250);
-        textSize(28);
-        text("CONNECT", 180, 180);
-        textSize(24);
-        text(jackModInstructions[0], 200, 220);
-        text(jackModInstructions[1], 200, 250);
-        text(jackModInstructions[2], 200, 280);
-        fill(255);
+        //Old Testing
+        //fill(250);
+        //textSize(28);
+        //text("CONNECT", 180, 180);
+        //textSize(24);
+        //text(jackModInstructions[0], 200, 220);
+        //text(jackModInstructions[1], 200, 250);
+        //text(jackModInstructions[2], 200, 280);
+        //fill(255);
+        
+        drawJackMod();
     
         if (testIfHeadphoneTaskDone() == true) {
           completedJack();
@@ -234,118 +319,63 @@ void draw()
   
      //LED Module
       if (modStatus[3]) {
-        fill(255);
-        textSize(16);
-        text(ledInstructions, 76, 680);
+        //Old Testing
+        //fill(255);
+        //textSize(16);
+        //text(ledInstructions, 76, 680);
+        
+        drawLEDMod();
     
         if (ledTaskDone() == true) {
           completedLED();
         }
       }
-  
-      //Testing
-      //Drawing Score
-      fill(255);
-      textSize(26);
-      text("Score : "+score, 850, 35);
-
 
    //*** Updating the game ***//
    if(timer > 0) timer-= 0.1;
    
+   //Testing for the 3 points of the timer counting down where the EnemyAttacks
+   float timerRatio = (timer/maxTimer);
+   int intRatio = (int)(timerRatio*1000);
+   if(intRatio == 750 || intRatio == 500 || intRatio == 250) timerWindow.enemyAttack();
+   
    //Testing if all mods have been done
    if(compareBooleanArrays(modStatus, allModsOff)){
-     score++;
+     if(isGameOver == false) score++;
      timer = maxTimer;
      newRound();
    }
    
-  // if (timer <= 0) gameOver();
-  text(timer, 50,50);
+   //Testing if the game is over
+    if (timer <= 0) isGameOver = true;
+    if(isGameOver) gameOver();
 }
 
 void gameOver(){
   background(0);
-  fill(255);
-  text("Game Over", 220, 300);
-}
-
-void newRound(){
-  //When the game is on Level 0
-  if(gameLevel == 0){
-    for(int i = 0; i < modRoundStatus.length; i++) modRoundStatus[i] = false; //Clear the mod status
-    level0Round++; //Increase the level round
-    
-    if (level0Round == 0){
-      modRoundStatus[0] = true; //Switch
-    }
-    
-    if (level0Round == 1){
-      modRoundStatus[1] = true; //Dial
-    }
-    
-    if (level0Round == 2){
-      modRoundStatus[2] = true; //Jack
-    }
-    
-    if (level0Round == 3){
-      modRoundStatus[3] = true; //LED
-    }
-    
-    if(level0Round >= 4) gameLevel++; //If the level 0 round is above 3, go to next level
-  } //Level 0 done
   
-  //Level 1 has 1 mod active
-  if(gameLevel == 1){
-    modPreviousStatus = new boolean[modRoundStatus.length];
-    arrayCopy(modRoundStatus, modPreviousStatus); //Copy the current status to hold for comparing to see if it changes
-    
-    while(compareBooleanArrays(modRoundStatus, modPreviousStatus)){  
-      for(int i = 0; i < modRoundStatus.length; i++) modRoundStatus[i] = false; //Clear the mod status
-      
-      int randMod = (int) random(4);
-      modRoundStatus[randMod] = true;
-    }
-    
-    if(level1Round >= level1NumRounds) gameLevel++;
-    
-    level1Round++;
-    
-  }
+  char a = (char)letter1;
+  char b = (char)letter2;
+  char c = (char)letter3;
   
-  //Level 2 has 2 mods active 
-  if(gameLevel == 2){
-    modPreviousStatus = new boolean[modRoundStatus.length];
-    arrayCopy(modRoundStatus, modPreviousStatus); //Copy the current status to hold for comparing to see if it changes
-    
-    while(compareBooleanArrays(modRoundStatus, modPreviousStatus)){
-      for(int i = 0; i < modRoundStatus.length; i++) modRoundStatus[i] = false; //Clear the mod status
-      
-      int randMod = (int) random(4);
-      modRoundStatus[randMod] = true;
-      
-      int randMod2 = randMod;
-      while(randMod2 == randMod){
-        randMod2 = (int) random(4);
-      }
-      
-      modRoundStatus[randMod2] = true;
-    }
-    
-    
-    if(level2Round >= level2NumRounds) gameLevel++;
-    
-    level2Round++;
-    
-  }
+  //Convert the chars to strings and save them as the full name
+  String sa = str(a);
+  String sb = str(b);
+  String sc = str(c);
+  name = sa + sb + sc;
   
-  //Level 3 has all 4 mods active
-  if(gameLevel == 3){
-    for(int i = 0; i < modRoundStatus.length; i++) modRoundStatus[i] = true;
-  }
+  fill(160);
+  textSize(50);
   
-  //Set the current status of the mods to the same as the status for that round
-  arrayCopy(modRoundStatus, modStatus); 
+  if(letterSelected == 1) fill(255);
+  text(a, 200,200);
+  fill(160);
+  if(letterSelected == 2) fill(255);
+  text(b, 300,200);
+  fill(160);
+  if(letterSelected == 3) fill(255);
+  text(c, 400,200);
+  fill(160);
 }
 
 void resetGame(){
@@ -368,24 +398,34 @@ void resetGame(){
   level1Round = 0;
   level2Round = 0;
   level3Round = 0;
+  
+  isGameOver = false;
+  
+  letter1 = 65;
+  letter2 = 65;
+  letter3 = 65;
 }
 
 void completedSwitch(){
+  timerWindow.playerAttack();
   setSwitchInstruction();
   modStatus[0] = false;
 }
 
 void completedDial(){
+  timerWindow.playerAttack();
    dialSet();
    modStatus[1] = false;
 }
 
 void completedJack(){
+  timerWindow.playerAttack();
   resetJackMod();
   modStatus[2] = false;
 }
 
 void completedLED(){
+  timerWindow.playerAttack();
   setLedInstruction();
   modStatus[3] = false;
 }
@@ -401,13 +441,75 @@ boolean compareBooleanArrays(boolean[] a, boolean[] b){
     else return false;
 }
 
+//Cheating
 void keyPressed(){
   if(keyCode == UP) newRound();
-  if(key == 'r') resetGame();
+  if(key == 'r'){
+    isGameOver = true;
+  }
+  
+  //Testing pressing enter on the game over screen
+  if(keyCode == ENTER && isGameOver) {
+    //This saves the score to the JSON file
+    jsonArray.append(name + " : " + score);
+    saveJSONArray(jsonArray, "JsonTest/highScore.json");
+    
+    //Reset the game
+    resetGame();
+  }
+  
+  //Changing letters on game over screen
+  if(isGameOver){
+    if(keyCode == DOWN){
+      if(letterSelected == 1){
+        letter1++;
+      }
+      if(letterSelected == 2){
+        letter2++;
+      }
+      if(letterSelected == 3){
+        letter3++;
+      }
+    }
+    
+    if(keyCode == UP){
+      if(letterSelected == 1){
+        letter1--;
+      }
+      if(letterSelected == 2){
+        letter2--;
+      }
+      if(letterSelected == 3){
+        letter3--;
+      }
+    }
+    
+    if(keyCode == LEFT){
+      letterSelected--;
+    }
+    
+    if(keyCode == RIGHT){
+      letterSelected++;
+    }
+    
+    //Looping values around
+    if(letter1 <= 65) letter1 +=26;
+    if(letter1 >= 91) letter1 -=26;
+        
+    if(letter2 <= 65) letter2 +=26;
+    if(letter2 >= 91) letter2 -=26;
+        
+    if(letter3 <= 65) letter3 +=26;
+    if(letter3 >= 91) letter3 -=26;
+    
+    if(letterSelected <= 0) letterSelected += 3;
+    if(letterSelected >= 4) letterSelected -= 3;
+    
+  }
   
   //Testing
-  if(key == '1') completedSwitch();
-  if(key == '2') completedDial();
-  if(key == '3') completedJack();
-  if(key == '4') completedLED();
+  if(key == '1') if(modStatus[0]) completedSwitch();
+  if(key == '2') if(modStatus[1]) completedDial();
+  if(key == '3') if(modStatus[2]) completedJack();
+  if(key == '4') if(modStatus[3]) completedLED();
 }

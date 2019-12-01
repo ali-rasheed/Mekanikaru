@@ -3,6 +3,10 @@ public float[] leftGaugeArr = {3, 6, 9, 12, 15, 18, 21, 24, 27, 30};
 
 public float[] rightGaugeArr = {3, 6, 9, 12, 15, 18, 21, 24, 27, 30};
 
+void drawDialMod(){
+  image(dialBg, dialPos.x+xOffset, dialPos.y+yOffset);
+}
+
 
 int setLeftGauge() {
 
