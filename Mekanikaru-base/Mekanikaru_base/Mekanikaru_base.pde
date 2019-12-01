@@ -2,6 +2,18 @@
 import processing.serial.*;
 import vsync.*;
 
+//Animation library
+import de.looksgood.ani.*;
+
+//Animation Variables
+Player player;
+Enemy enemy;
+
+ArrayList<Module> modules = new ArrayList<Module>();
+ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+
+float setTransparency = 0;
+
 //Multiple Screens
 SecondWindow timerWindow;
 
@@ -88,7 +100,7 @@ int level3Round = 0;
 
 //Tracking game values
 int score = 0;
-float maxTimer = 1000;
+float maxTimer = 100;
 float timer = maxTimer;
 
 boolean isGameOver;
@@ -343,6 +355,7 @@ void draw()
    if(compareBooleanArrays(modStatus, allModsOff)){
      if(isGameOver == false) score++;
      timer = maxTimer;
+     timerWindow.playerDefeat();
      newRound();
    }
    
@@ -512,4 +525,21 @@ void keyPressed(){
   if(key == '2') if(modStatus[1]) completedDial();
   if(key == '3') if(modStatus[2]) completedJack();
   if(key == '4') if(modStatus[3]) completedLED();
+  
+  //Animation testing, not working
+  //if (key == 'q') {
+  //  timerWindow.playerAttack();
+  //}
+  //if (key == 'p') {
+  //  timerWindow.enemyAttack();
+  //}
+  //if (key == ' ') {
+  //  timerWindow.resetPlayerSpeed();
+  //}
+  //if (key == 'w') {
+  // timerWindow.playerDefeat();
+  //}
+  //if (key == 'o') {
+  //  timerWindow.enemyDefeat();
+  //}
 }
