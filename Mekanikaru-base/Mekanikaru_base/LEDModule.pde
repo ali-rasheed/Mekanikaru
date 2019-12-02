@@ -1,6 +1,6 @@
-  String[] rColours = {"255", "255", "255", "0", "0", "128"};
-  String[] gColours = {"0", "165", "255", "255", "0", "0"};
-  String[] bColours = {"0", "0", "0", "0", "255", "128"};
+  String[] rColours = {"255", "0", "0", "255", "255", "255"};
+  String[] gColours = {"0", "255", "0", "155", "0", "255"};
+  String[] bColours = {"0", "0", "255", "0", "255", "0"};
   
   int led1A, led2A;
   
@@ -11,17 +11,19 @@
     
     pushMatrix();
       fill(255);
-      textSize(24);
+      textFont(numFont, 60);
+      textAlign(CENTER);
+      //textSize(24);
       
       translate(LEDPos.x,LEDPos.y);
       
-      text(rColours[led1A],70,70);
-      text(gColours[led1A],70,110);
-      text(bColours[led1A],70,150);
+      text(rColours[led1A],220,172);
+      text(gColours[led1A],220,252);
+      text(bColours[led1A],220,332);
       
-      text(rColours[led2A],260,70);
-      text(gColours[led2A],260,110);
-      text(bColours[led2A],260,150);
+      text(rColours[led2A],594,172);
+      text(gColours[led2A],594,252);
+      text(bColours[led2A],594,332);
     popMatrix();
   }
   

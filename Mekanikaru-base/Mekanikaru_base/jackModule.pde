@@ -1,4 +1,4 @@
-int numJacks = 8;
+int numJacks = 7;
 int numPlugs = 5;
 
 int[] plugInstructions;
@@ -16,7 +16,7 @@ void drawJackMod(){
   strokeWeight(3);
   stroke(255);
   for(int i =0; i < numPlugs; i++){
-    line(78,letterPos[i], 318,numberPos[plugInstructions[i]-1]);
+    line(180,letterPos[i], 640,numberPos[plugInstructions[i]-1]);
   }
   
   //println(plugInstructions);
@@ -41,6 +41,14 @@ boolean testIfHeadphoneTaskDone() {
     if(i == 2) {
       if(jC == plugInstructions[i]) numCorrect++;
     }
+    
+    if(i == 3) {
+      if(jD == plugInstructions[i]) numCorrect++;
+    }
+    
+    if(i == 4) {
+      if(jE == plugInstructions[i]) numCorrect++;
+    }
   }
   
   if(numCorrect >= numPlugs) return true;
@@ -62,11 +70,11 @@ void initializeJackMod(){
   
   //Creating the positions for the numbers
   for(int i = 0; i < numberPos.length; i++){
-    numberPos[i] = 10+(i*23);
+    numberPos[i] = 48+(i*54);
   }
   //Creating the positions for the letters
   for(int i = 0; i < letterPos.length; i++){
-    letterPos[i] = 21+(i*35);
+    letterPos[i] = 62+(i*72);
   }
   
 }
@@ -89,10 +97,4 @@ void resetJackMod(){
     stillAvailible[randomNum-1] = 0; //Remove the number from the still availible numbers
     plugInstructions[i] = randomNum; //If the spot isn't taken (it got past the while loop) make the plug instrution equal that number 
   }
-  
-  //Resetting the string of instructions
-  //for(int i = 0; i < numPlugs; i++){
-  //  char c = (char) (i+65); // This converts the current position to a character. when i = 0 c = A, i = 1 c = B, ect.
-  //  jackModInstructions[i] = c + " to " + plugInstructions[i]; //Generates the instructiosn as A to num, B to num, ect. 
-  //}
 }

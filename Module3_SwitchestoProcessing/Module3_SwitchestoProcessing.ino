@@ -7,16 +7,27 @@
 #define C_LED_PIN  5
 #define D_LED_PIN  6
 #define E_LED_PIN  7
+#define F_LED_PIN  8
+#define G_LED_PIN  9
+#define H_LED_PIN  10
+#define I_LED_PIN  11
+#define J_LED_PIN  12
 
 
 
-ValueSender<5> sender1;
+ValueSender<10> sender1;
 
 int switchA = 0;
 int switchB = 0;
 int switchC = 0;
 int switchD = 0;
 int switchE = 0;
+int switchF = 0;
+int switchG = 0;
+int switchH = 0;
+int switchI = 0;
+int switchJ = 0;
+int switchK = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -27,6 +38,11 @@ void setup() {
   pinMode(C_LED_PIN , INPUT);
   pinMode(D_LED_PIN, INPUT);
   pinMode(E_LED_PIN, INPUT);
+    pinMode(F_LED_PIN, INPUT);
+      pinMode(E_LED_PIN, INPUT);
+        pinMode(E_LED_PIN, INPUT);
+          pinMode(E_LED_PIN, INPUT);
+          
 
 
   //pinMode(button8Pin, INPUT);

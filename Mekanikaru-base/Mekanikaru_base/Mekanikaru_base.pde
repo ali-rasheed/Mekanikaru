@@ -14,6 +14,11 @@ ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 
 float setTransparency = 0;
 
+PImage timerBackground;
+
+PFont scoreFont;
+PFont numFont;
+
 //Multiple Screens
 SecondWindow timerWindow;
 
@@ -28,6 +33,7 @@ int yOffset = -30;
 
 //Module positions
 PVector switchPos, dialPos, jackPos, LEDPos;
+
 
 
 //Writing the highScore with .txt file
@@ -54,7 +60,7 @@ public int RGB1, RGB2;
 public int LEDReset;
 
 //switch Values
-public int switchA, switchB, switchC, switchD, switchE, switchF, switchG, switchH, switchI, switchJ;
+public int state1, state2, state3, state4, state5, state6, state7, state8, state9, state10;
 
 //jackValues
 public int jA;
@@ -104,7 +110,9 @@ int score = 0;
 float maxTimer = 100;
 float timer = maxTimer;
 
+boolean isGameStart = true;
 boolean isGameOver;
+
 
 //Game over screen
 int letter1 = 65; //Int version of a
@@ -113,86 +121,108 @@ int letter3 = 65;
 int letterSelected = 1;
 String name;
 
-PImage bg, switchBg, dialBg, jackBg, LEDBg;
+PImage bg, startbg, switchBg, dialBg, jackBg, LEDBg, bgFuzz;
 
 //***Testing Stuff***//
-boolean testingWithoutArduinos = true;
+boolean testingWithoutArduinos = false;
 
 void settings() {
-  bg = loadImage("Assets/Background.png");
+  bg = loadImage("Assets/monitorBackground.png");
+  startbg = loadImage("Assets/StartScreen.png");
+  bgFuzz = loadImage("Assets/backgroundFuz.png");
   switchBg = loadImage("Assets/SwitchMod.png");
   dialBg = loadImage("Assets/DialMod.png");
   jackBg = loadImage("Assets/JackMod.png");
   LEDBg = loadImage("Assets/LEDMod.png");
   
   //Resize the image to not be fullscreen for testing
-  bg.resize(0,540);
-  switchBg.resize(0,240);
-  dialBg.resize(0,240);
-  jackBg.resize(0,240);
-  LEDBg.resize(0,240);
+  //bg.resize(0,540);
+  ////bg.resize(displayWidth, displayHeight);
+  //switchBg.resize(0,240);
+  //dialBg.resize(0,240);
+  //jackBg.resize(0,240);
+  //LEDBg.resize(0,240);
   
 
-  size(bg.width, bg.height);
+  //size(displayWidth, displayHeight);
+  //size(bg.width, bg.height);
+  fullScreen(2);
+  
   
 }
 
 void setup() 
 {
+  frameRate(15);
+  println(displayWidth, displayHeight);
   
   //Main Window
+  //xUnit = displayWidth/15;
+  //yUnit = displayHeight/9;
   xUnit = width/15;
   yUnit = height/9;
   modHeight = yUnit*3;
   modWidth = xUnit*6;
   
+  //Timer Window Loading, This will not load if in the SecondWindow class
+  timerBackground = loadImage("Assets/TimerBackground.png");
+  //timerBackground.resize(xUnit*10,yUnit*7);
+  
+  scoreFont = createFont("Assets/Roboto_Mono/RobotoMono-Bold.ttf", 20);
+  numFont = createFont("Assets/Roboto_Mono/RobotoMono-Bold.ttf", 100);
+  
   //Mod Positions
-  switchPos = new PVector(1*xUnit, 1*yUnit);
-  dialPos = new PVector(8*xUnit, 1*yUnit);
-  jackPos = new PVector(1*xUnit, 5*yUnit);
-  LEDPos = new PVector(8*xUnit, 5*yUnit);
+  //switchPos = new PVector(1*xUnit, 1*yUnit);
+  //dialPos = new PVector(8*xUnit, 1*yUnit);
+  //jackPos = new PVector(1*xUnit, 5*yUnit);
+  //LEDPos = new PVector(8*xUnit, 5*yUnit);
+  
+  int xoffset = -20;
+  switchPos = new PVector(128+xoffset, 60);
+  dialPos = new PVector(1024+xoffset, 60);
+  jackPos = new PVector(128+xoffset, 600);
+  LEDPos = new PVector(1024+xoffset, 600);
   
   //Second Window
   timerWindow = new SecondWindow();
-  
-  //HighScore Writing
-  //highScoreWriting = createWriter("highScores.txt");
-  
-  //JSON array
-  //jsonArray = loadJSONArray("JsonTest/data.json");
   
   jsonArrayNumbers = loadJSONArray("JsonTest/highScoreNumbers.json");
   jsonArrayNames = loadJSONArray("JsonTest/highScoreNames.json");
 
 
-if(testingWithoutArduinos == false) {
-  dialArduino = new Serial(this, "COM5", 11000);
-  LEDArduino = new Serial(this, "COM4", 9600);
-  LEDSender = new ValueSender(this, LEDArduino);
+//if(testingWithoutArduinos == false) {
+  println(Serial.list());
+  //dialArduino = new Serial(this, "COM5", 11000);
+  dialArduino = new Serial(this, Serial.list()[1], 20000);
+  //LEDArduino = new Serial(this, "COM4", 9600);
+  //LEDArduino = new Serial(this, Serial.list()[1], 9600);
+  //LEDSender = new ValueSender(this, LEDArduino);
   dialSender = new ValueSender(this, dialArduino);
-  LEDReset = 0;
-  switchArduino = new Serial(this, "COM3", 5000);
-  jackArduino = new Serial(this, "COM2", 12600);
+  //LEDReset = 0;
+  //switchArduino = new Serial(this, "COM3", 5000);
+  //switchArduino = new Serial(this, Serial.list()[1], 4800);
+  //jackArduino = new Serial(this, "COM2", 12600);
+  //jackArduino = new Serial(this, Serial.list()[1], 12600);
   dialReceiver = new ValueReceiver(this, dialArduino);
-  LEDReceiver = new ValueReceiver(this, LEDArduino);
-  switchReceiver = new ValueReceiver(this, switchArduino);
-  jackReceiver = new ValueReceiver(this, jackArduino);
+  //LEDReceiver = new ValueReceiver(this, LEDArduino);
+  //switchReceiver = new ValueReceiver(this, switchArduino);
+  //jackReceiver = new ValueReceiver(this, jackArduino);
 
-  LEDReceiver.observe("RGB1");
-  LEDReceiver.observe("RGB2");
-  LEDReceiver.observe("LEDReset");
-  LEDSender.observe("LEDReset");
+  //LEDReceiver.observe("RGB1");
+  //LEDReceiver.observe("RGB2");
+  //LEDReceiver.observe("LEDReset");
+  //LEDSender.observe("LEDReset");
 
-  switchReceiver.observe("switchA");
-  switchReceiver.observe("switchB");
-  switchReceiver.observe("switchC");
-  switchReceiver.observe("switchD");
-  switchReceiver.observe("switchE");
-  switchReceiver.observe("switchF");
-  switchReceiver.observe("switchG");
-  switchReceiver.observe("switchH");
-  switchReceiver.observe("switchI");
-  switchReceiver.observe("switchJ");
+  //switchReceiver.observe("state1");
+  //switchReceiver.observe("state2");
+  //switchReceiver.observe("state3");
+  //switchReceiver.observe("state4");
+  //switchReceiver.observe("state5");
+  //switchReceiver.observe("state6");
+  //switchReceiver.observe("state7");
+  //switchReceiver.observe("state8");
+  //switchReceiver.observe("state9");
+  //switchReceiver.observe("state10");
 
   dialReceiver.observe("dialVal");
   dialReceiver.observe("confirm");
@@ -201,12 +231,12 @@ if(testingWithoutArduinos == false) {
   dialSender.observe("motorSet");
 
 
-  jackReceiver.observe("jA");
-  jackReceiver.observe("jB");
-  jackReceiver.observe("jC");
-  jackReceiver.observe("jD");
-  jackReceiver.observe("jE");
-}
+  //jackReceiver.observe("jA");
+  //jackReceiver.observe("jB");
+  //jackReceiver.observe("jC");
+  //jackReceiver.observe("jD");
+  //jackReceiver.observe("jE");
+//}
 
   //Init the allModsOff array
   for (int i =0; i < allModsOff.length; i++){
@@ -224,29 +254,37 @@ if(testingWithoutArduinos == false) {
   initLEDMod();
   setSwitchInstruction();
   //setLedInstruction();
-  dialSet();
+  //dialSet();
 }
 
 void draw() 
 {
   //***Testing Functions***//
   //println("rgb1: " +RGB1);
-  //println("rgb1: " +RGB2);
+  //println("rgb2: " +RGB2);
 
-  //println("switchA: " +switchA);
-  //println("switchB: " +switchB);
-  //println("switchC: " +switchC);
-  //println("switchD: " +switchD);
-  //println("switchE: " +switchE);
+  //println("switchA: " +state1);
+  //println("switchB: " +state2);
+  //println("switchC: " +state3);
+  //println("switchD: " +state4);
+  //println("switchE: " +state5);
+  //println("switchF: " +state6);
+  //println("switchG: " +state7);
+  //println("switchH: " +state8);
+  //println("switchI: " +state9);
+  //println("switchJ: " +state10);
   //println(millis());
 
-  //println("dialVal: " +dialVal);
+  println("dialVal: " +dialVal);
+  println("confirm: " +confirm);
+  println(targetDial);
+  println(millis());
 
-  println("jackA: " +jA);
-  println("jackB: " +jB);
-  println("jackC: " +jC);
-  println("jackC: " +jD);
-  println("jackC: " +jC);
+  //println("jackA: " +jA);
+  //println("jackB: " +jB);
+  //println("jackC: " +jC);
+  //println("jackD: " +jD);
+  //println("jackE: " +jE);
 
   //Testing
   //println(modStatus);
@@ -271,8 +309,13 @@ void draw()
 
   //***Reset Each Draw***//
   LEDReset = 0;
-  setMatrix(); //This is for the dial Mod but I don't know why it needs to be here
+  //setMatrix(); //This is for the dial Mod but I don't know why it needs to be here
   
+  //***If on the start screen***//
+  if(isGameStart){
+    background(startbg);
+    //image(bgFuzz, 0, 0);
+  }else{
 
   //*****Playing The Game*****//
   
@@ -337,6 +380,7 @@ void draw()
    //Testing if the game is over
     if (timer <= 0) isGameOver = true;
     if(isGameOver) gameOver();
+}
 }
 
 void gameOver(){
@@ -403,6 +447,7 @@ void completedSwitch(){
 void completedDial(){
   timerWindow.playerAttack();
    dialSet();
+   dialTaskDone = false;
    modStatus[1] = false;
 }
 
@@ -436,25 +481,13 @@ void keyPressed(){
     isGameOver = true;
   }
   
+  if(keyCode == ENTER && isGameStart){
+    isGameStart = false;
+    dialSet();
+  }
+  
   //Testing pressing enter on the game over screen
   if(keyCode == ENTER && isGameOver) {
-    //JSONObject player = new JSONObject();
-    
-    //player.setInt("score", score);
-    //player.setString("name", name);
-    
-    //jsonArray.append(player);
-    
-    //saveJSONArray(jsonArray, "JsonTest/data.json");
-    
-    
-    ////This saves the score to the JSON file
-    //jsonArrayNumbers.append(name + " : " + score);
-    //saveJSONArray(jsonArrayNumbers, "JsonTest/highScoreNumbers.json");
-    
-    //jsonArrayNames.append(name + " : " + score);
-    //saveJSONArray(jsonArrayNames, "JsonTest/highScoreNames.json");
-    
     jsonArrayNumbers.append(score);
     saveJSONArray(jsonArrayNumbers, "JsonTest/highScoreNumbers.json");
     
@@ -462,6 +495,7 @@ void keyPressed(){
     saveJSONArray(jsonArrayNames, "JsonTest/highScoreNames.json");
     
     //Reset the game
+    isGameStart = true;
     resetGame();
   }
   
@@ -535,5 +569,9 @@ void keyPressed(){
   }
   if (key == 'o') {
     timerWindow.enemyDefeat();
+  }
+  
+  if (key == 'd') {
+    dialSet();
   }
 }

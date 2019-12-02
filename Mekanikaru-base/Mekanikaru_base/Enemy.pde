@@ -3,6 +3,8 @@ class Enemy extends Actor {
   PImage sprite2;
   PImage sprite3;
   
+  float resizeX ;
+  
   Enemy(float x, float y, float w, float h) {
     super(x, y, w, h);
     sprite = loadImage("Assets/Monster.png");

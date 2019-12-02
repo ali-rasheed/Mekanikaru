@@ -1,6 +1,6 @@
 JSONArray jsonNames, jsonScores;
 
-PFont font;
+PFont fontBig, fontSmall;
 
 PImage bg;
 
@@ -20,8 +20,9 @@ void setup() {
   
   size(960, 540);
   
-  font = createFont("fonts/RobotoMono-Bold.ttf", 80);
-  textFont(font,165);
+  fontBig = createFont("fonts/RobotoMono-Bold.ttf", 80);
+  fontSmall = createFont("fonts/RobotoMono-Bold.ttf", 40);
+
   
   
   
@@ -32,11 +33,21 @@ void draw() {
   
   sortJSON();
   
+  textFont(fontBig,165);
   fill(#FFFFFF);
-  text(jsonNames.getString(indexOfNum[0]), 260, 240);
+  text(jsonNames.getString(indexOfNum[0]), 260, 240); 
   
   fill(#60DAFF);
   text(jsonScores.getInt(indexOfNum[0]), 650, 240);
+  
+  textFont(fontSmall,60);
+  fill(#FFFFFF);
+  text(jsonNames.getString(indexOfNum[1]), 110, 355); 
+  text(jsonNames.getString(indexOfNum[2]), 110, ); 
+  text(jsonNames.getString(indexOfNum[3]), 110, 270); 
+  
+  fill(#60DAFF);
+  text(jsonScores.getInt(indexOfNum[2]), 650, 240);
   
   
   

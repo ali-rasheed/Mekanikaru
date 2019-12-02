@@ -11,7 +11,7 @@ int green[] = {0,100,0};
 int blue[] = {0,0,150};
 int purple[] = {150,0,175};
 
-char colourChar[] = {'h','i','j','k','l','m'};
+//char colourChar[] = {'h','i','j','k','l','m'};
 
 int button1 = 12;
 int button2 = 13;
@@ -108,19 +108,19 @@ void checkLED1() {
     goRed1();
   }
   if (colour1 == 1) {
-    goOrange1();
-  }
-  if (colour1 == 2) {
-    goYellow1();
-  }
-  if (colour1 == 3) {
     goGreen1();
   }
-  if (colour1 == 4) {
+  if (colour1 == 2) {
     goBlue1();
   }
-  if (colour1 == 5) {
+  if (colour1 == 3) {
+    goOrange1();
+  }
+  if (colour1 == 4) {
     goPurple1();
+  }
+  if (colour1 == 5) {
+    goYellow1();
   }
 
   // SEND COLOUR VALUES //
@@ -161,19 +161,19 @@ void checkLED2() {
     goRed2();
   }
   if (colour2 == 1) {
-    goOrange2();
-  }
-  if (colour2 == 2) {
-    goYellow2();
-  }
-  if (colour2 == 3) {
     goGreen2();
   }
-  if (colour2 == 4) {
+  if (colour2 == 2) {
     goBlue2();
   }
-  if (colour2 == 5) {
+  if (colour2 == 3) {
+    goOrange2();
+  }
+  if (colour2 == 4) {
     goPurple2();
+  }
+  if (colour2 == 5) {
+    goYellow2();
   }
 
   // SYNC VSYNC //

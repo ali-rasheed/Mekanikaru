@@ -11,8 +11,8 @@ class SecondWindow extends PApplet {
   }
   
   public void settings() {
-   //size(1000,1000);
-   size(displayWidth, displayHeight);
+   size(1280,840);
+   //size(displayWidth, displayHeight);
    //fullScreen();
    //fullScreen(2); //This should open it on the second monitor
 
@@ -21,9 +21,8 @@ class SecondWindow extends PApplet {
   public void setup() {
     surface.setTitle("Timer");
     
-    smooth();
+    //smooth();
     Ani.init(this);
-    //background(0);
     
     fill(255);
     stroke(255);
@@ -38,11 +37,13 @@ class SecondWindow extends PApplet {
     modules.add(tempModule);
     modules.add(scoreModule);
     
-    player = new Player( aniModule.xPos + 3*xUnit, aniModule.yPos + aniModule.modH/2, 1*yUnit, 1*yUnit);
-    enemy = new Enemy( aniModule.xPos + 7*xUnit, aniModule.yPos + aniModule.modH/2, 1*yUnit, 1*yUnit);
+    player = new Player( aniModule.xPos + 3*xUnit, aniModule.yPos + 100 + aniModule.modH/2, 1*yUnit, 1*yUnit);
+    enemy = new Enemy( aniModule.xPos + 7*xUnit, aniModule.yPos +100 + aniModule.modH/2, 1*yUnit, 1*yUnit);
     
     player.setAnimations();
     player.transparency = 255;
+    
+    
     
   }
   
@@ -58,15 +59,28 @@ class SecondWindow extends PApplet {
     //text("EnemyAttacks " + enemyAttacks, 100,400);
     //background(200);
     
-    background(0);
-    drawModules();
-    enemy.render();
-    player.render();
-    if (setTransparency <= 20) {
-      setTransparency++;
+    if(isGameOver){
+      //Draw gameover screen
     }
-    if (setTransparency == 20) {
-      player.transparency = 255;
+    
+    if(isGameStart){
+      //Draw game start screen
+    }
+    
+    if(isGameOver == false && isGameStart == false){
+      background(0);
+      drawModules();
+      drawBackground();
+      drawRoundCount();
+      drawTimer();
+      enemy.render();
+      player.render();
+      if (setTransparency <= 20) {
+        setTransparency++;
+      }
+      if (setTransparency == 20) {
+        player.transparency = 255;
+      }
     }
   
   }
@@ -77,6 +91,33 @@ void drawModules() {
   for (int i = 0; i < modules.size(); i++){
     Module m = modules.get(i);
     m.render();
+  }
+}
+
+void drawBackground() {
+  timerWindow.image(timerBackground,xUnit,yUnit);
+}
+
+void drawTimer() {
+  float timerRatio = (timer/maxTimer);
+  int rectMaxHeight = 5*yUnit;
+  
+  if(timerRatio >= 0.25)  fill(#96E6FF);
+  else fill(#F90400);
+  
+  rect(12*xUnit, (3*yUnit)+(rectMaxHeight), 2*xUnit, -((1-timerRatio)*rectMaxHeight));
+}
+
+void drawRoundCount() {
+  textFont(scoreFont);
+  fill(0);
+  text("ROUND",12.1*xUnit,2*yUnit);
+  textFont(numFont);
+  if(score < 10){
+    text("0",12.7*xUnit,2*yUnit);
+    text(score,12.7*xUnit+60,2*yUnit);
+  }else{
+    text(score,12.7*xUnit,2*yUnit);
   }
 }
 
