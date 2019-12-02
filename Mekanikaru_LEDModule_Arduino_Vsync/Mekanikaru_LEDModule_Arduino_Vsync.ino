@@ -1,8 +1,12 @@
 #include <VSync.h>
 
 ValueSender<2> sender;
+ValueReceiver<1> receiver;
+
 int RGB1;
 int RGB2;
+
+int LEDReset = 0;
 
 int red[] = {255,0,0};
 int orange[] = {200,20,0};
@@ -45,13 +49,17 @@ void setup() {
   Serial.begin(9600);
   sender.observe(RGB1);
   sender.observe(RGB2);
+
+  receiver.observe(LEDReset);
 }
 
 void loop() {
 
   // LISTEN FOR RESET CALL //
 
-  resetListen();
+  //resetListen();
+
+  if(LEDReset == 1) reset();
 
   // CYCLE COLOURS //
 
@@ -257,11 +265,11 @@ void reset() {
   cycle2 = true;
 }
 
-void resetListen() {
-  if (Serial.available() > 0) {
-    char state = Serial.read();
-    if (state == 'r') {
-      reset();
-    }
-  }
-}
+//void resetListen() {
+//  if (Serial.available() > 0) {
+//    char state = Serial.read();
+//    if (state == 'r') {
+//      reset();
+//    }
+//  }
+//}

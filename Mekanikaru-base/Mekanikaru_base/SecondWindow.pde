@@ -11,10 +11,10 @@ class SecondWindow extends PApplet {
   }
   
   public void settings() {
-   size(1280,840);
+   //size(1920,1080);
    //size(displayWidth, displayHeight);
    //fullScreen();
-   //fullScreen(2); //This should open it on the second monitor
+   fullScreen(2); //This should open it on the second monitor
 
   }
   
@@ -60,11 +60,29 @@ class SecondWindow extends PApplet {
     //background(200);
     
     if(isGameOver){
-      //Draw gameover screen
+      background(endScreen);
+      
+      fill(255);
+      //textSize(50);
+      textAlign(CENTER);
+      textFont(numFont, 404);
+      text(score, 1440, 440);
+      
+      textSize(160);
+      fill(160);
+      if(letterSelected == 1) fill(255);
+      text(a, 1270,780);
+      fill(160);
+      if(letterSelected == 2) fill(255);
+      text(b, 1430,780);
+      fill(160);
+      if(letterSelected == 3) fill(255);
+      text(c, 1590,780);
+      fill(160);
     }
     
     if(isGameStart){
-      //Draw game start screen
+      background(startbg);
     }
     
     if(isGameOver == false && isGameStart == false){

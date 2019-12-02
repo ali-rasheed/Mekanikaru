@@ -22,6 +22,7 @@ PFont numFont;
 //Multiple Screens
 SecondWindow timerWindow;
 
+
 //Main Screen Values
 int xUnit;
 int yUnit;
@@ -33,8 +34,6 @@ int yOffset = -30;
 
 //Module positions
 PVector switchPos, dialPos, jackPos, LEDPos;
-
-
 
 //Writing the highScore with .txt file
 PrintWriter highScoreWriting;
@@ -121,7 +120,15 @@ int letter3 = 65;
 int letterSelected = 1;
 String name;
 
-PImage bg, startbg, switchBg, dialBg, jackBg, LEDBg, bgFuzz;
+char a = 'A';
+char b = 'A'; 
+char c = 'A';
+
+String sa = str(a);
+String sb = str(b);
+String sc = str(c);
+
+PImage bg, startbg, switchBg, dialBg, jackBg, LEDBg, bgFuzz, endScreen;
 
 //***Testing Stuff***//
 boolean testingWithoutArduinos = false;
@@ -129,6 +136,7 @@ boolean testingWithoutArduinos = false;
 void settings() {
   bg = loadImage("Assets/monitorBackground.png");
   startbg = loadImage("Assets/StartScreen.png");
+  endScreen = loadImage("Assets/EndScreen.png");
   bgFuzz = loadImage("Assets/backgroundFuz.png");
   switchBg = loadImage("Assets/SwitchMod.png");
   dialBg = loadImage("Assets/DialMod.png");
@@ -146,7 +154,8 @@ void settings() {
 
   //size(displayWidth, displayHeight);
   //size(bg.width, bg.height);
-  fullScreen(2);
+  size(1920, 1080);
+  //fullScreen(2);
   
   
 }
@@ -193,25 +202,25 @@ void setup()
 //if(testingWithoutArduinos == false) {
   println(Serial.list());
   //dialArduino = new Serial(this, "COM5", 11000);
-  dialArduino = new Serial(this, Serial.list()[1], 20000);
+  //dialArduino = new Serial(this, Serial.list()[1], 20000);
   //LEDArduino = new Serial(this, "COM4", 9600);
-  //LEDArduino = new Serial(this, Serial.list()[1], 9600);
-  //LEDSender = new ValueSender(this, LEDArduino);
-  dialSender = new ValueSender(this, dialArduino);
+  LEDArduino = new Serial(this, Serial.list()[1], 9600);
+  LEDSender = new ValueSender(this, LEDArduino);
+  //dialSender = new ValueSender(this, dialArduino);
   //LEDReset = 0;
   //switchArduino = new Serial(this, "COM3", 5000);
   //switchArduino = new Serial(this, Serial.list()[1], 4800);
   //jackArduino = new Serial(this, "COM2", 12600);
   //jackArduino = new Serial(this, Serial.list()[1], 12600);
-  dialReceiver = new ValueReceiver(this, dialArduino);
-  //LEDReceiver = new ValueReceiver(this, LEDArduino);
+  //dialReceiver = new ValueReceiver(this, dialArduino);
+  LEDReceiver = new ValueReceiver(this, LEDArduino);
   //switchReceiver = new ValueReceiver(this, switchArduino);
   //jackReceiver = new ValueReceiver(this, jackArduino);
 
-  //LEDReceiver.observe("RGB1");
-  //LEDReceiver.observe("RGB2");
+  LEDReceiver.observe("RGB1");
+  LEDReceiver.observe("RGB2");
   //LEDReceiver.observe("LEDReset");
-  //LEDSender.observe("LEDReset");
+  LEDSender.observe("LEDReset");
 
   //switchReceiver.observe("state1");
   //switchReceiver.observe("state2");
@@ -224,11 +233,11 @@ void setup()
   //switchReceiver.observe("state9");
   //switchReceiver.observe("state10");
 
-  dialReceiver.observe("dialVal");
-  dialReceiver.observe("confirm");
-  dialSender.observe("leftGauge");
-  dialSender.observe("rightGauge");
-  dialSender.observe("motorSet");
+  //dialReceiver.observe("dialVal");
+  //dialReceiver.observe("confirm");
+  //dialSender.observe("leftGauge");
+  //dialSender.observe("rightGauge");
+  //dialSender.observe("motorSet");
 
 
   //jackReceiver.observe("jA");
@@ -275,10 +284,10 @@ void draw()
   //println("switchJ: " +state10);
   //println(millis());
 
-  println("dialVal: " +dialVal);
-  println("confirm: " +confirm);
-  println(targetDial);
-  println(millis());
+  //println("dialVal: " +dialVal);
+  //println("confirm: " +confirm);
+  //println(targetDial);
+  //println(millis());
 
   //println("jackA: " +jA);
   //println("jackB: " +jB);
@@ -308,7 +317,7 @@ void draw()
   
 
   //***Reset Each Draw***//
-  LEDReset = 0;
+  //LEDReset = 0;
   //setMatrix(); //This is for the dial Mod but I don't know why it needs to be here
   
   //***If on the start screen***//
@@ -384,29 +393,34 @@ void draw()
 }
 
 void gameOver(){
-  background(0);
+  background(endScreen);
   
-  char a = (char)letter1;
-  char b = (char)letter2;
-  char c = (char)letter3;
+  a = (char)letter1;
+  b = (char)letter2;
+  c = (char)letter3;
   
   //Convert the chars to strings and save them as the full name
-  String sa = str(a);
-  String sb = str(b);
-  String sc = str(c);
+  sa = str(a);
+  sb = str(b);
+  sc = str(c);
   name = sa + sb + sc;
   
-  fill(160);
-  textSize(50);
+  fill(255);
+  //textSize(50);
+  textAlign(CENTER);
+  textFont(numFont, 404);
+  text(score, 1440, 440);
   
+  textSize(160);
+  fill(160);
   if(letterSelected == 1) fill(255);
-  text(a, 200,200);
+  text(a, 1270,780);
   fill(160);
   if(letterSelected == 2) fill(255);
-  text(b, 300,200);
+  text(b, 1430,780);
   fill(160);
   if(letterSelected == 3) fill(255);
-  text(c, 400,200);
+  text(c, 1590,780);
   fill(160);
 }
 
@@ -460,6 +474,7 @@ void completedJack(){
 void completedLED(){
   timerWindow.playerAttack();
   setLedInstruction();
+  LEDReset = 1;
   modStatus[3] = false;
 }
 
