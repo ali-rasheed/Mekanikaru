@@ -73,6 +73,8 @@ void newRound(){
   //Level 3 has all 4 mods active
   if(gameLevel == 3){
     for(int i = 0; i < modRoundStatus.length; i++) modRoundStatus[i] = true;
+    level3Round++;
+    if(level3Round >= 4) maxTimer = 60;
   }
   
   //Set the current status of the mods to the same as the status for that round

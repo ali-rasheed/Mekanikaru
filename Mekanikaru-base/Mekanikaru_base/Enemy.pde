@@ -69,7 +69,7 @@ class Enemy extends Actor {
   }
   
   void newMonster() {
-    monsterVar = int(random(0,3));
+    monsterVar = int(random(0,6));
   }
   
 }

@@ -1,7 +1,7 @@
 
-public float[] leftGaugeArr = {3, 6, 9, 12, 15, 18, 21, 24, 27, 30};
+public float[] leftGaugeArr = {4, 8, 12, 16, 20, 24, 28, 32, 36};
 
-public float[] rightGaugeArr = {3, 6, 9, 12, 15, 18, 21, 24, 27, 30};
+public float[] rightGaugeArr = {3, 6, 9, 12, 15, 18, 21, 24, 27};
 
 void drawDialMod(){
   image(dialBg, dialPos.x+xOffset, dialPos.y+yOffset);
@@ -13,7 +13,7 @@ void drawDialMod(){
 
 int setLeftGauge() {
 
-  int indexVal= floor(random(10));
+  int indexVal= floor(random(9));
 
   leftGauge = floor(leftGaugeArr[indexVal]);
 
@@ -24,7 +24,7 @@ int setLeftGauge() {
 }
 int setRightGauge() {
 
-  int indexVal= floor(random(10));
+  int indexVal= floor(random(9));
 
   rightGauge= floor(rightGaugeArr[indexVal]); 
 

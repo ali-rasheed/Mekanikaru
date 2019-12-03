@@ -16,9 +16,10 @@ void setup() {
   frameRate(0.5);
   
   bg = loadImage("images/background.png");
-  bg.resize(0,540);
+  //bg.resize(1920,1080);
   
-  size(960, 540);
+  //size(1920, 1080);
+    fullScreen(2);
   
   fontBig = createFont("fonts/RobotoMono-Bold.ttf", 80);
   fontSmall = createFont("fonts/RobotoMono-Bold.ttf", 40);
@@ -33,26 +34,47 @@ void draw() {
   
   sortJSON();
   
-  textFont(fontBig,165);
+  //#1 HighScore
+  textFont(fontBig,330);
   fill(#FFFFFF);
-  text(jsonNames.getString(indexOfNum[0]), 260, 240); 
+  text(jsonNames.getString(indexOfNum[0]), 521, 480); 
   
   fill(#60DAFF);
-  text(jsonScores.getInt(indexOfNum[0]), 650, 240);
+  text(jsonScores.getInt(indexOfNum[0]), 1344, 480);
   
-  textFont(fontSmall,60);
+  //Names
+  textFont(fontSmall,81);
   fill(#FFFFFF);
-  text(jsonNames.getString(indexOfNum[1]), 110, 355); 
-  text(jsonNames.getString(indexOfNum[2]), 110, ); 
-  text(jsonNames.getString(indexOfNum[3]), 110, 270); 
+  text(jsonNames.getString(indexOfNum[1]), 232, 661+59); 
+  text(jsonNames.getString(indexOfNum[2]), 232, 781+59 ); 
+  text(jsonNames.getString(indexOfNum[3]), 232, 900+59); 
   
+  text(jsonNames.getString(indexOfNum[4]), 872, 661+59); 
+  text(jsonNames.getString(indexOfNum[5]), 872, 781+59 ); 
+  text(jsonNames.getString(indexOfNum[6]), 872, 900+59); 
+  
+  text(jsonNames.getString(indexOfNum[7]), 1448, 661+59); 
+  text(jsonNames.getString(indexOfNum[8]), 1448, 781+59 ); 
+  text(jsonNames.getString(indexOfNum[9]), 1448, 900+59); 
+  
+  //Numbers
   fill(#60DAFF);
-  text(jsonScores.getInt(indexOfNum[2]), 650, 240);
+  text(jsonScores.getInt(indexOfNum[1]), 423, 661+59);
+  text(jsonScores.getInt(indexOfNum[2]), 423, 781+59);
+  text(jsonScores.getInt(indexOfNum[3]), 423, 900+59);
+  
+  text(jsonScores.getInt(indexOfNum[4]), 1063, 661+59);
+  text(jsonScores.getInt(indexOfNum[5]), 1063, 781+59);
+  text(jsonScores.getInt(indexOfNum[6]), 1063, 900+59);
+  
+  text(jsonScores.getInt(indexOfNum[7]), 1639, 661+59);
+  text(jsonScores.getInt(indexOfNum[8]), 1639, 781+59);
+  text(jsonScores.getInt(indexOfNum[9]), 1639, 900+59);
   
   
   
   //Test printing to consol
-  for(int i = 0; i < jsonScores.size(); i++){
+  for(int i = 0; i < 10; i++){
     println(jsonNames.getString(indexOfNum[i]));
     println(jsonScores.getInt(indexOfNum[i]));
     println();

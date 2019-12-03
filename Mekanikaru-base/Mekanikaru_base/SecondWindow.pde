@@ -14,7 +14,7 @@ class SecondWindow extends PApplet {
    //size(1920,1080);
    //size(displayWidth, displayHeight);
    //fullScreen();
-   fullScreen(2); //This should open it on the second monitor
+   fullScreen(3); //This should open it on the second monitor
 
   }
   
